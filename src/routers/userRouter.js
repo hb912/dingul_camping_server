@@ -43,6 +43,7 @@ userRouter.get('/auth', loginRequired, (req, res, next) => {
   res.status(200).json(req.currentUserId);
 });
 
+//처음 프론트가 보내줄 get 경로
 userRouter.get(
   '/kakao',
   passport.authenticate('kakao', {
@@ -51,5 +52,20 @@ userRouter.get(
 );
 
 userRouter.get('/oauth', passport.authenticate('kakao'));
+//redirectURL
+userRouter.get(
+  '/oauth',
+  passport.authenticate('kakao', {
+    failureRedirect: '/',
+  }),
+  async (req, res) => {
+    console.log(`req:${req.user}`);
+    if (!req.user) {
+      return res.status(400).json('error');
+    }
+    const token = await userService.getUserToken(req.user);
+    res.status(200).json({ message: 'OK', token });
+  }
+);
 
 export { userRouter };
