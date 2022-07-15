@@ -19,6 +19,9 @@ const UserSchema = new Schema(
       type: String,
       default: 'user',
     },
+    provider: {
+      type: String,
+    },
   },
   {
     collection: 'users',

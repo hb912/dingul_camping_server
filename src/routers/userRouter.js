@@ -43,6 +43,7 @@ userRouter.get('/auth', loginRequired, (req, res, next) => {
   res.status(200).json(req.currentUserId);
 });
 
+//처음 프론트가 보내줄 get 경로
 userRouter.get(
   '/kakao',
   passport.authenticate('kakao', {
@@ -51,5 +52,41 @@ userRouter.get(
 );
 
 userRouter.get('/oauth', passport.authenticate('kakao'));
+//redirectURL
+userRouter.get(
+  '/oauth',
+  passport.authenticate('kakao', {
+    failureRedirect: '/',
+  }),
+  async (req, res) => {
+    console.log(`req:${req.user}`);
+    if (!req.user) {
+      return res.status(400).json('error');
+    }
+    const token = await userService.getUserToken(req.user);
+    res.status(200).json({ message: 'OK', token });
+  }
+);
+
+//패스워드 확인
+userRouter.get('/confirmPW', loginRequired, async (req, res, next) => {
+  const { password } = req.body;
+  try {
+    const user = await userService.getUser(req.currentUserId);
+    const correctPasswordHash = user.password;
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      correctPasswordHash
+    );
+    if (!isPasswordCorrect) {
+      throw new Error(
+        '현재 비밀번호가 일치하지 않습니다. 다시 한 번 확인해 주세요.'
+      );
+    }
+    res.status(200).json(isPasswordCorrect);
+  } catch (error) {
+    next(error);
+  }
+});
 
 export { userRouter };

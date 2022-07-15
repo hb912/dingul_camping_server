@@ -47,6 +47,24 @@ class UserService {
     return user;
   }
 
+  async confirmPassword(userId, password) {
+    console.log(userId);
+    const user = await this.userModel.findById(userId);
+    const correctPasswordHash = user.password;
+    console.log(correctPasswordHash, password);
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      correctPasswordHash
+    );
+    console.log(isPasswordCorrect);
+    if (!isPasswordCorrect) {
+      throw new Error(
+        '현재 비밀번호가 일치하지 않습니다. 다시 한 번 확인해 주세요.'
+      );
+    }
+    return isPasswordCorrect;
+  }
+
   // 유저정보 수정, 현재 비밀번호가 있어야 수정 가능함.
   async setUser(userInfoRequired, toUpdate) {
     // 객체 destructuring
@@ -86,12 +104,12 @@ class UserService {
     }
 
     // 업데이트 진행
-    const userUp = await this.userModel.update({
+    const updateUser = await this.userModel.update({
       userId,
       toUpdate,
     });
 
-    return userUp;
+    return updateUser;
   }
 
   async deleteUser(userId) {
