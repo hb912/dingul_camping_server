@@ -6,6 +6,7 @@ import passport from 'passport';
 import passportConfig from './passport';
 // import MongoStore from 'connect-mongo';
 import session from 'express-session';
+import { errorHandler } from './middleware';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -27,6 +28,7 @@ app.use(
 );
 app.use(passport.initialize());
 app.use('/api', userRouter);
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`서버를 시작하였습니다. localhost:${PORT}`);
