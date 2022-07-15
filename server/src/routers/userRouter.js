@@ -38,4 +38,9 @@ userRouter.post('/login', async (req, res, next) => {
   })(req, res, next);
 });
 
+userRouter.get('/auth', loginRequired, (req, res, next) => {
+  console.log(req.currentUserId);
+  res.status(200).json(req.currentUserId);
+});
+
 export { userRouter };
