@@ -68,4 +68,25 @@ userRouter.get(
   }
 );
 
+//패스워드 확인
+userRouter.get('/confirmPW', loginRequired, async (req, res, next) => {
+  const { password } = req.body;
+  try {
+    const user = await userService.getUser(req.currentUserId);
+    const correctPasswordHash = user.password;
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      correctPasswordHash
+    );
+    if (!isPasswordCorrect) {
+      throw new Error(
+        '현재 비밀번호가 일치하지 않습니다. 다시 한 번 확인해 주세요.'
+      );
+    }
+    res.status(200).json(isPasswordCorrect);
+  } catch (error) {
+    next(error);
+  }
+});
+
 export { userRouter };
