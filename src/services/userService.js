@@ -104,13 +104,11 @@ class UserService {
     }
 
     // 업데이트 진행
-    const userUp = await this.userModel.update({
     const updateUser = await this.userModel.update({
       userId,
       toUpdate,
     });
 
-    return userUp;
     return updateUser;
   }
 
