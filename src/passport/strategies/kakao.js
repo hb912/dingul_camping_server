@@ -1,4 +1,5 @@
 import { Strategy as KakaoStrategy } from 'passport-kakao';
+import { userModel } from '../../db';
 
 const config = {
   clientID: process.env.KAKAO_CLIENT_ID,
@@ -9,7 +10,21 @@ const config = {
 const kakao = new KakaoStrategy(
   config,
   async (accessToken, refreshToken, profile, done) => {
-    console.log('kakao profile', profile);
+    try {
+      const user = await userModel.findKakaoUser(profile.id);
+      if (user) {
+        done(null, user);
+      } else {
+        const newUser = await userModel.create({
+          email: profile.id,
+          name: profile.displayName,
+          provider: 'kakao',
+        });
+        done(null, newUser);
+      }
+    } catch (error) {
+      done(error);
+    }
   }
 );
 

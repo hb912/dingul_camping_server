@@ -16,6 +16,15 @@ export class UserModel {
     return user;
   }
 
+  async findKakaoUser(userId) {
+    console.log(userId);
+    const user = await User.findOne({
+      where: { email: userId, provider: 'kakao' },
+    });
+    console.log(user);
+    return user;
+  }
+
   async create(userInfo) {
     //유저 생성(회원가입)
     const createdNewUser = await User.create(userInfo);
