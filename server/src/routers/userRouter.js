@@ -5,6 +5,22 @@ import { loginRequired } from '../middleware/loginRequired';
 
 const userRouter = Router();
 
+// 회원가입 api (아래는 /register이지만, 실제로는 /api/register로 요청해야 함.)
+userRouter.post('/register', async (req, res, next) => {
+  try {
+    const { name, email, password } = req.body;
+    const newUser = await userService.addUser({
+      name,
+      email,
+      password,
+    });
+
+    res.status(201).json(newUser);
+  } catch (error) {
+    next(error);
+  }
+});
+
 userRouter.post('/login', async (req, res, next) => {
   passport.authenticate('local', { session: false }, (err, user, info) => {
     console.log(info);
