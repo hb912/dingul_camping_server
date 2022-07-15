@@ -43,4 +43,13 @@ userRouter.get('/auth', loginRequired, (req, res, next) => {
   res.status(200).json(req.currentUserId);
 });
 
+userRouter.get(
+  '/kakao',
+  passport.authenticate('kakao', {
+    failureRedirect: '/', // 실패했을 경우 리다이렉트 경로
+  })
+);
+
+userRouter.get('/oauth', passport.authenticate('kakao'));
+
 export { userRouter };
