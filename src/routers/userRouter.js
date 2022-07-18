@@ -2,10 +2,10 @@ import { Router } from 'express';
 import { userService } from '../services';
 import passport from 'passport';
 import { loginRequired } from '../middleware/loginRequired';
+import bcrypt from 'bcrypt';
 
 const userRouter = Router();
 
-// 회원가입 api (아래는 /register이지만, 실제로는 /api/register로 요청해야 함.)
 userRouter.post('/register', async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
@@ -38,11 +38,6 @@ userRouter.post('/login', async (req, res, next) => {
   })(req, res, next);
 });
 
-userRouter.get('/auth', loginRequired, (req, res, next) => {
-  console.log(req.currentUserId);
-  res.status(200).json(req.currentUserId);
-});
-
 //처음 프론트가 보내줄 get 경로
 userRouter.get(
   '/kakao',
@@ -51,7 +46,6 @@ userRouter.get(
   })
 );
 
-userRouter.get('/oauth', passport.authenticate('kakao'));
 //redirectURL
 userRouter.get(
   '/oauth',
@@ -86,6 +80,37 @@ userRouter.get('/confirmPW', loginRequired, async (req, res, next) => {
     res.status(200).json(isPasswordCorrect);
   } catch (error) {
     next(error);
+  }
+});
+
+userRouter.get('/user', loginRequired, async (req, res, next) => {
+  if (!req.currentUserId) {
+    res.status(400).json('유저정보를 찾을 수 없습니다.');
+  }
+  try {
+    const user = await userService.getUser(req.currentUserId);
+    res.status(200).json(user);
+  } catch (e) {
+    next(e);
+  }
+});
+
+userRouter.get('/logout', loginRequired, async (req, res) => {
+  req.logout();
+  req.session.save(function () {
+    res.status(200).json({ message: 'Ok' });
+  });
+});
+
+userRouter.delete('/user', loginRequired, async (req, res, next) => {
+  if (!req.currentUserId) {
+    res.status(400).json('유저정보를 찾을 수 없습니다.');
+  }
+  try {
+    const result = await userService.delete(req.currentUserId);
+    res.status(200).json(result);
+  } catch (e) {
+    next(e);
   }
 });
 
