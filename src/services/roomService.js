@@ -5,8 +5,12 @@ class RoomService {
     this.roomModel = roomModel;
   }
 
-  async addRoom(roomInfo) {
-    const newRoom = await this.roomModel.create(roomInfo);
+  async addRoom(room) {
+    const exRoom = await this.roomModel.findByName(room.name);
+    if (exRoom) {
+      throw new Error('이미 존재하는 방 입니다.');
+    }
+    const newRoom = await this.roomModel.create(room);
     return newRoom;
   }
 
