@@ -2,7 +2,7 @@ import { Schema } from 'mongoose';
 
 const BookingSchema = new Schema(
   {
-    RoomID: {
+    roomID: {
       type: Schema.Types.ObjectID,
       required: true,
       ref: 'rooms',
@@ -16,6 +16,9 @@ const BookingSchema = new Schema(
       type: Number,
       required: true,
     },
+    processDate: {
+      type: [Date],
+    },
     peopleNumber: {
       type: Number,
       required: true,
@@ -25,11 +28,11 @@ const BookingSchema = new Schema(
     },
     state: {
       type: String,
-      required: true,
+      default: '예약 요청',
     },
     isReviewed: {
       type: Boolean,
-      required: true,
+      default: false,
     },
   },
   {
