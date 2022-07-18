@@ -5,6 +5,11 @@ class RoomService {
     this.roomModel = roomModel;
   }
 
+  async addRoom(roomInfo) {
+    const newRoom = await this.roomModel.create(roomInfo);
+    return newRoom;
+  }
+
   async getRoomInfo(roomId) {
     const roomInfo = await this.roomModel.findById(roomId);
     return roomInfo;
