@@ -71,6 +71,11 @@ class BookingService {
 
     return newBooking;
   }
+
+  async getBooks() {
+    const bookList = bookingModel.findAll();
+    return bookList;
+  }
 }
 
 const bookingService = new BookingService(bookingModel);
