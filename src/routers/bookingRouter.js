@@ -104,4 +104,14 @@ bookingRouter.patch('/review', async (req, res, next) => {
   }
 });
 
+bookingRouter.delete('/', async (req, res, next) => {
+  try {
+    const { bookingID } = req.body;
+    const result = await bookingService.delete(bookingID);
+    res.status(200).json(result);
+  } catch (e) {
+    next(e);
+  }
+});
+
 export { bookingRouter };
