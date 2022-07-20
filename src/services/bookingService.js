@@ -103,6 +103,17 @@ class BookingService {
     const set = new Set(JSON.parse(JSON.stringify(rooms)));
     return [...set];
   }
+
+  //admin이 사용할 날짜별 주문조회
+  async getByDate(startDate, endDate) {
+    if (!startDate || !endDate) {
+      throw new Error('시작 날짜 혹은 종료 날짜가 없습니다.');
+    }
+    const stringDates = this.getDate(startDate, endDate);
+    const bookings = await bookingModel.findByDate(stringDates);
+    return bookings;
+  }
+
   //RoomID로 가능한 날짜 조회
   async getDatesByRoomID(roomID) {
     const dates = await this.bookingModel.findDatesByRoomId(roomID);
