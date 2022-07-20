@@ -21,10 +21,20 @@ export class BookingModel {
   }
 
   async findDatesByRoomId(roomId) {
+  async findDatesByRoomId(roomID) {
+    let date = new Date();
+    date.setDate(date.getDate() - 1);
     const findDates = await Booking.find(
-      { roomId },
+      {
+        roomID,
+        startDate: { $gte: date },
+      },
       { _id: 0, processDate: 1 }
-    );
+    ).sort({ startDate: 1 });
+    if (!findDates || findDates.length < 1) {
+      return;
+    }
+
     const dates = Object.values(findDates);
     const joinDates = new Array();
     dates.map((date) => {
@@ -33,7 +43,7 @@ export class BookingModel {
     const result = joinDates.reduce(function (acc, cur) {
       return [...acc, ...cur];
     });
-
+    console.log(result);
     return result;
   }
 

@@ -71,4 +71,14 @@ bookingRouter.get('/byDates', async (req, res, next) => {
     next(e);
   }
 });
+
+bookingRouter.get('/byRoom', async (req, res, next) => {
+  try {
+    const { roomID } = req.body;
+    const rooms = await bookingService.getDatesByRoomID(roomID);
+    res.status(200).json(rooms);
+  } catch (e) {
+    next(e);
+  }
+});
 export { bookingRouter };

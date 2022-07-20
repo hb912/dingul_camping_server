@@ -82,6 +82,12 @@ class BookingService {
     const set = new Set(JSON.parse(JSON.stringify(rooms)));
     return [...set];
   }
+  //RoomID로 가능한 날짜 조회
+  async getDatesByRoomID(roomID) {
+    const dates = await this.bookingModel.findDatesByRoomId(roomID);
+    return dates;
+  }
+
 }
 
 const bookingService = new BookingService(bookingModel);
