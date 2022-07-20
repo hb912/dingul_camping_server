@@ -71,6 +71,17 @@ class BookingService {
 
     return newBooking;
   }
+  async getRoomsByDate(startDate, endDate, peopleNumber) {
+    const stringDates = this.getDates(startDate, endDate);
+    const rooms = await bookingModel.findRoomsByDate(stringDates);
+    const allRooms = await roomModel.findAll();
+    allRooms.map((room) => {
+      if (room.minPeople > peopleNumber || room.maxPeople < peopleNumber)
+        rooms.push(room._id);
+    });
+    const set = new Set(JSON.parse(JSON.stringify(rooms)));
+    return [...set];
+  }
 }
 
 const bookingService = new BookingService(bookingModel);

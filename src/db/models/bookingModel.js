@@ -38,10 +38,16 @@ export class BookingModel {
   }
 
   async findByDate(dates) {
+  async findRoomsByDate(stringDates) {
+    const dates = stringDates.map((date) => new Date(date));
     const disableRooms = await Booking.find(
       { processDate: { $in: dates } },
       { _id: 0, roomID: 1 }
-    ).populate('roomID');
+    ).distinct('roomID');
+
+    return disableRooms;
+  }
+
     return disableRooms;
   }
 

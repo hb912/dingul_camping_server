@@ -58,4 +58,17 @@ bookingRouter.post('/create', loginRequired, async (req, res, next) => {
   }
 });
 
+bookingRouter.get('/byDates', async (req, res, next) => {
+  try {
+    const { startDate, endDate, peopleNumber } = req.body;
+    const rooms = await bookingService.getRoomsByDate(
+      startDate,
+      endDate,
+      peopleNumber
+    );
+    res.status(200).json(rooms);
+  } catch (e) {
+    next(e);
+  }
+});
 export { bookingRouter };
