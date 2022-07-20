@@ -1,7 +1,7 @@
 import cors from 'cors';
 import express from 'express';
 import 'dotenv/config';
-import { userRouter, bookingRouter, roomRouter } from './routers';
+import { userRouter, bookingRouter, roomRouter, adminRouter } from './routers';
 import passport from 'passport';
 import passportConfig from './passport';
 // import MongoStore from 'connect-mongo';
@@ -30,6 +30,7 @@ app.use(passport.initialize());
 app.use('/api', userRouter);
 app.use('/api', roomRouter);
 app.use('/api/booking', bookingRouter);
+app.use('/api/admin', adminRouter);
 app.use(errorHandler);
 
 app.listen(PORT, () => {
