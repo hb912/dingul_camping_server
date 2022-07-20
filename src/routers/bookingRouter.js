@@ -58,6 +58,18 @@ bookingRouter.post('/create', loginRequired, async (req, res, next) => {
   }
 });
 
+bookingRouter.get('/user', loginRequired, async (req, res, next) => {
+  try {
+    const userID = req.currentUserId;
+    const page = Number(req.body.page || 1);
+    const perPage = Number(req.body.perPage || 10);
+    const bookings = await bookingService.getByUserId(userID, perPage, page);
+    res.status(200).json(bookings);
+  } catch (e) {
+    next(e);
+  }
+});
+
 bookingRouter.get('/byDates', async (req, res, next) => {
   try {
     const { startDate, endDate, peopleNumber } = req.body;

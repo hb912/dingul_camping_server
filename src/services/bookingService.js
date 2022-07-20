@@ -71,6 +71,21 @@ class BookingService {
 
     return newBooking;
   }
+
+  //유저의 마이페이지 예약 조회
+  async getByUserId(userID, perPage, page) {
+    if (!userID) {
+      throw new Error('유저 정보가 없습니다.');
+    }
+    const bookings = await this.bookingModel.findByUserId(
+      userID,
+      perPage,
+      page
+    );
+    return bookings;
+  }
+
+  //유저가 사용할 날짜별 가능한 룸
   async getRoomsByDate(startDate, endDate, peopleNumber) {
     const stringDates = this.getDates(startDate, endDate);
     const rooms = await bookingModel.findRoomsByDate(stringDates);
