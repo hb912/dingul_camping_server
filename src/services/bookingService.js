@@ -6,7 +6,7 @@ class BookingService {
     this.bookingModel = bookingModel;
   }
 
-  //startDate, stopDate로 새로운 배열 생성
+  //startDate, stopDate로 새로운 날짜 배열 생성
   getDates(startDate, stopDate) {
     let dateArray = new Array();
     let currentDate = moment(startDate).format('YYYY-MM-DD');
@@ -30,6 +30,7 @@ class BookingService {
       price,
       email,
       phone,
+      phoneNumber,
       userID,
     } = bookingInfo;
 
@@ -44,13 +45,16 @@ class BookingService {
 
     const processDate = this.getDates(startDate, endDate);
     const dates = await this.bookingModel.findDatesByRoomId(roomID);
-    const stringDates = dates.map((date) => new Date(date).toDateString());
-    //예약하고 싶은 날짜에 예약이 존재하는지 확인
-    const filteredDates = processDate.filter((date) =>
-      stringDates.includes(new Date(date).toDateString())
-    );
-    if (filteredDates.length >= 1) {
-      throw new Error('같은 날짜에 예약이 존재합니다.');
+    if (dates) {
+      const stringDates = dates.map((date) => new Date(date).toDateString());
+      //예약하고 싶은 날짜에 예약이 존재하는지 확인
+      const filteredDates = processDate.filter((date) =>
+        stringDates.includes(new Date(date).toDateString())
+      );
+      console.log(filteredDates);
+      if (filteredDates.length >= 1) {
+        throw new Error('같은 날짜에 예약이 존재합니다.');
+      }
     }
 
     const newBooking = await this.bookingModel.create({
@@ -61,8 +65,10 @@ class BookingService {
       requirements,
       price,
       email,
-      phone,
+      phoneNumber,
       userID,
+      startDate,
+      endDate,
     });
 
     if (!newBooking) {
