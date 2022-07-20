@@ -29,7 +29,6 @@ class BookingService {
       requirements,
       price,
       email,
-      phone,
       phoneNumber,
       userID,
     } = bookingInfo;
