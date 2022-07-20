@@ -8,11 +8,12 @@ const userRouter = Router();
 
 userRouter.post('/register', async (req, res, next) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, phoneNumber } = req.body;
     const newUser = await userService.addUser({
       name,
       email,
       password,
+      phoneNumber,
     });
 
     res.status(201).json(newUser);
