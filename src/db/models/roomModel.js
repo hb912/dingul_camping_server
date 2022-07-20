@@ -28,6 +28,10 @@ export class RoomModel {
     });
     return newRoom;
   }
+  async findAll() {
+    const rooms = await Room.find({});
+    return rooms;
+  }
 }
 
 const roomModel = new RoomModel();
