@@ -1,5 +1,5 @@
 import { model } from 'mongoose';
-import { RoomSchema } from '../schemas/userSchema';
+import { RoomSchema } from '../schemas/roomSchema';
 
 const Room = model('rooms', RoomSchema);
 

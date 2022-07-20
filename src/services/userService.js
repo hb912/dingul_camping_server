@@ -9,7 +9,7 @@ class UserService {
 
   // 회원가입
   async addUser(userInfo) {
-    const { email, name, password } = userInfo;
+    const { email, name, password, phoneNumber } = userInfo;
 
     // 이메일 중복 확인
     const user = await this.userModel.findByEmail(email);
@@ -20,7 +20,7 @@ class UserService {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUserInfo = { name, email, password: hashedPassword };
+    const newUserInfo = { name, email, password: hashedPassword, phoneNumber };
     const createdNewUser = await this.userModel.create(newUserInfo);
     return createdNewUser;
   }
