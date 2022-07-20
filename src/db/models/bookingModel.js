@@ -22,11 +22,10 @@ export class BookingModel {
   }
 
   async findByRoomId(roomId) {
-    const bookingInfos = await Booking.findOne({ roomId });
+    const bookingInfos = await Booking.find({ roomId });
     return bookingInfos;
   }
 
-  async findDatesByRoomId(roomId) {
   async findDatesByRoomId(roomID) {
     let date = new Date();
     date.setDate(date.getDate() - 1);
@@ -53,7 +52,6 @@ export class BookingModel {
     return result;
   }
 
-  async findByDate(dates) {
   async findRoomsByDate(stringDates) {
     const dates = stringDates.map((date) => new Date(date));
     const disableRooms = await Booking.find(
@@ -63,6 +61,10 @@ export class BookingModel {
 
     return disableRooms;
   }
+
+  async findByDate(stringDates) {
+    const dates = stringDates.map((date) => new Date(date));
+    const disableRooms = await Booking.find({ processDate: { $in: dates } });
 
     return disableRooms;
   }
@@ -80,8 +82,6 @@ export class BookingModel {
   }
 
   //주문상태변경
-  async updateStatus({ bookingId, status }) {
-    const filter = { _id: bookingId };
   async updateStatus({ bookingID, status }) {
     const filter = { _id: bookingID };
     const option = { returnOriginal: false };
