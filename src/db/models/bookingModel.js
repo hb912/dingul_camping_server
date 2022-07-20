@@ -4,9 +4,15 @@ import { BookingSchema } from '../schemas/bookingSchema';
 const Booking = model('booking', BookingSchema);
 
 export class BookingModel {
-  async findByUserId(userId) {
-    const bookingInfos = await Booking.findOne({ userId });
-    return bookingInfos;
+  async findByUserId(userID, perPage, page) {
+    const total = await Booking.countDocuments({ userID });
+    console.log(total, perPage, page);
+    const bookingInfos = await Booking.find({ userID })
+      .sort({ startDate: -1 })
+      .skip(perPage * (page - 1))
+      .limit(perPage);
+    const totalPage = Math.ceil(total / perPage);
+    return { bookingInfos, totalPage, page };
   }
 
   //booking ID와 일치하는 BookingInfo 찾기
@@ -16,15 +22,24 @@ export class BookingModel {
   }
 
   async findByRoomId(roomId) {
-    const bookingInfos = await Booking.findOne({ roomId });
+    const bookingInfos = await Booking.find({ roomId });
     return bookingInfos;
   }
 
-  async findDatesByRoomId(roomId) {
+  async findDatesByRoomId(roomID) {
+    let date = new Date();
+    date.setDate(date.getDate() - 1);
     const findDates = await Booking.find(
-      { roomId },
+      {
+        roomID,
+        startDate: { $gte: date },
+      },
       { _id: 0, processDate: 1 }
-    );
+    ).sort({ startDate: 1 });
+    if (!findDates || findDates.length < 1) {
+      return;
+    }
+
     const dates = Object.values(findDates);
     const joinDates = new Array();
     dates.map((date) => {
@@ -33,15 +48,24 @@ export class BookingModel {
     const result = joinDates.reduce(function (acc, cur) {
       return [...acc, ...cur];
     });
-
+    console.log(result);
     return result;
   }
 
-  async findByDate(dates) {
+  async findRoomsByDate(stringDates) {
+    const dates = stringDates.map((date) => new Date(date));
     const disableRooms = await Booking.find(
       { processDate: { $in: dates } },
       { _id: 0, roomID: 1 }
-    ).populate('roomID');
+    ).distinct('roomID');
+
+    return disableRooms;
+  }
+
+  async findByDate(stringDates) {
+    const dates = stringDates.map((date) => new Date(date));
+    const disableRooms = await Booking.find({ processDate: { $in: dates } });
+
     return disableRooms;
   }
 
@@ -58,13 +82,25 @@ export class BookingModel {
   }
 
   //주문상태변경
-  async updateStatus({ bookingId, status }) {
-    const filter = { _id: bookingId };
+  async updateStatus({ bookingID, status }) {
+    const filter = { _id: bookingID };
     const option = { returnOriginal: false };
-
+    console.log(status);
     const updatedBooking = await Booking.findOneAndUpdate(
       filter,
-      status,
+      { status },
+      option
+    );
+    return updatedBooking;
+  }
+
+  async updateReviewed(bookingID) {
+    const date = new Date();
+    const filter = { _id: bookingID };
+    const option = { returnOriginal: false };
+    const updatedBooking = await Booking.findOneAndUpdate(
+      filter,
+      { isReviewed: true },
       option
     );
     return updatedBooking;
