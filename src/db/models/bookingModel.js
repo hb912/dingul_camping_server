@@ -88,9 +88,13 @@ export class BookingModel {
     return updatedBooking;
   }
 
+  async updateReviewed(bookingID) {
+    const date = new Date();
+    const filter = { _id: bookingID };
+    const option = { returnOriginal: false };
     const updatedBooking = await Booking.findOneAndUpdate(
       filter,
-      status,
+      { isReviewed: true },
       option
     );
     return updatedBooking;

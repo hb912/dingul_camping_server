@@ -93,6 +93,18 @@ class BookingService {
     return result;
   }
 
+  async changeReviewed(bookingID) {
+    const date = new Date();
+    const booking = await this.bookingModel.findById(bookingID);
+    if (!booking) {
+      throw new Error('해당 예약 내역이 없습니다.');
+    }
+    if (booking.endDate > date)
+      throw new Error('지난 예약만 리뷰를 작성할 수 있습니다.');
+    const result = this.bookingModel.updateReviewed(bookingID);
+    return result;
+  }
+
 }
 
 const bookingService = new BookingService(bookingModel);

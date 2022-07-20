@@ -94,4 +94,14 @@ bookingRouter.patch('/cancel', loginRequired, async (req, res, next) => {
   }
 });
 
+bookingRouter.patch('/review', async (req, res, next) => {
+  try {
+    const { bookingID } = req.body;
+    const result = await bookingService.changeReviewed(bookingID);
+    res.status(200).json(result);
+  } catch (e) {
+    next(e);
+  }
+});
+
 export { bookingRouter };
