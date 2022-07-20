@@ -76,7 +76,17 @@ export class BookingModel {
   //주문상태변경
   async updateStatus({ bookingId, status }) {
     const filter = { _id: bookingId };
+  async updateStatus({ bookingID, status }) {
+    const filter = { _id: bookingID };
     const option = { returnOriginal: false };
+    console.log(status);
+    const updatedBooking = await Booking.findOneAndUpdate(
+      filter,
+      { status },
+      option
+    );
+    return updatedBooking;
+  }
 
     const updatedBooking = await Booking.findOneAndUpdate(
       filter,

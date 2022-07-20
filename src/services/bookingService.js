@@ -88,6 +88,11 @@ class BookingService {
     return dates;
   }
 
+  async changeStatus(bookingID, status) {
+    const result = await this.bookingModel.updateStatus({ bookingID, status });
+    return result;
+  }
+
 }
 
 const bookingService = new BookingService(bookingModel);

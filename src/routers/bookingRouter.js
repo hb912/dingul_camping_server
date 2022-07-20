@@ -81,4 +81,17 @@ bookingRouter.get('/byRoom', async (req, res, next) => {
     next(e);
   }
 });
+
+bookingRouter.patch('/cancel', loginRequired, async (req, res, next) => {
+  const { bookingID } = req.body;
+  try {
+    const result = await bookingService.changeStatus(bookingID, '취소 요청');
+    if (result.status !== '취소 요청')
+      throw new Error('업데이트에 실패했습니다.');
+    res.status(200).json(result);
+  } catch (e) {
+    next(e);
+  }
+});
+
 export { bookingRouter };
