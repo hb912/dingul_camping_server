@@ -20,19 +20,25 @@ const bookingRouter = Router();
 //   },
 
 bookingRouter.post('/create', loginRequired, async (req, res, next) => {
+  const {
+    startDate,
+    endDate,
+    name,
+    roomID,
+    peopleNumber,
+    requirements,
+    price,
+    email,
+    phoneNumber,
+  } = req.body;
+  const userID = req.currentUserId;
+  const date = new Date();
+  date.setDate(date.getDate() - 1);
+
   try {
-    const {
-      startDate,
-      endDate,
-      name,
-      roomID,
-      peopleNumber,
-      requirements,
-      price,
-      email,
-      phone,
-    } = req.body;
-    const userID = req.currentUserId;
+    if (new Date(startDate) < date)
+      return res.status(400).json('과거의 예약은 진행할 수 없습니다.');
+
     const newUser = await bookingService.addBooking({
       startDate,
       endDate,
@@ -42,7 +48,7 @@ bookingRouter.post('/create', loginRequired, async (req, res, next) => {
       requirements,
       price,
       email,
-      phone,
+      phoneNumber,
       userID,
     });
 
