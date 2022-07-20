@@ -4,9 +4,15 @@ import { BookingSchema } from '../schemas/bookingSchema';
 const Booking = model('booking', BookingSchema);
 
 export class BookingModel {
-  async findByUserId(userId) {
-    const bookingInfos = await Booking.findOne({ userId });
-    return bookingInfos;
+  async findByUserId(userID, perPage, page) {
+    const total = await Booking.countDocuments({ userID });
+    console.log(total, perPage, page);
+    const bookingInfos = await Booking.find({ userID })
+      .sort({ startDate: -1 })
+      .skip(perPage * (page - 1))
+      .limit(perPage);
+    const totalPage = Math.ceil(total / perPage);
+    return { bookingInfos, totalPage, page };
   }
 
   //booking ID와 일치하는 BookingInfo 찾기
