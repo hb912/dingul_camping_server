@@ -145,6 +145,11 @@ class BookingService {
     const bookList = bookingModel.findAll();
     return bookList;
   }
+
+  async getBookRequests() {
+    const bookRequests = bookingModel.findRequests();
+    return bookRequests;
+  }
 }
 
 const bookingService = new BookingService(bookingModel);
