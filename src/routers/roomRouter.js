@@ -4,10 +4,10 @@ import { roomService } from '../services/roomService';
 const roomRouter = Router();
 
 //방 정보 가져오기
-roomRouter.get('/roomInfo', async (req, res, next) => {
-  const { roomId } = req.body;
+roomRouter.get('/:roomID', async (req, res, next) => {
+  const { roomID } = req.query;
   try {
-    const roomInfo = await roomService.getRoomInfo(roomId);
+    const roomInfo = await roomService.getRoomInfo(roomID);
     if (!roomInfo) {
       throw new Error('해당하는 방의 정보가 없습니다.');
     }
@@ -17,7 +17,7 @@ roomRouter.get('/roomInfo', async (req, res, next) => {
   }
 });
 
-roomRouter.post('/room/create', async (req, res, next) => {
+roomRouter.post('/create', async (req, res, next) => {
   const { name, price, content, imgSrc, maxPeople, minPeople } = req.body;
   try {
     const newRoom = await roomService.addRoom({
