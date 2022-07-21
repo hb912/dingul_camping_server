@@ -42,6 +42,16 @@ reviewRouter.get('/', async (req, res, next) => {
   }
 });
 
+reviewRouter.get('/:reviewID', async (req, res, next) => {
+  const { reviewID } = req.params;
+  try {
+    const review = await reviewService.getReview(reviewID);
+    res.status(200).json(review);
+  } catch (e) {
+    next(e);
+  }
+});
+
 reviewRouter.post('/create', loginRequired, async (req, res, next) => {
   const { roomID, bookingID, content, title, grade, name } = req.body;
   console.log(bookingID);

@@ -31,6 +31,14 @@ class ReviewService {
     return reviews;
   }
 
+  async getReview(reviewID) {
+    const review = await this.reviewModel.findById(reviewID);
+    if (!review) {
+      throw new Error('해당 리뷰가 없습니다.');
+    }
+    return review;
+  }
+
 }
 
 const reviewService = new ReviewService(reviewModel);
