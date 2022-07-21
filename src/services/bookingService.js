@@ -103,6 +103,23 @@ class BookingService {
     return [...set];
   }
 
+  async getExistBooking(startDate, endDate, roomID) {
+    const processDate = this.getDates(startDate, endDate);
+    const dates = await this.bookingModel.findDatesByRoomId(roomID);
+    if (dates) {
+      const stringDates = dates.map((date) => new Date(date).toDateString());
+      //예약하고 싶은 날짜에 예약이 존재하는지 확인
+      const filteredDates = processDate.filter((date) =>
+        stringDates.includes(new Date(date).toDateString())
+      );
+      console.log(filteredDates);
+      if (filteredDates.length >= 1) {
+        throw new Error('같은 날짜에 이미 예약이 존재합니다.');
+      }
+    }
+    return { message: 'Ok' };
+  }
+
   //admin이 사용할 날짜별 주문조회
   async getByDate(startDate, endDate) {
     if (!startDate || !endDate) {

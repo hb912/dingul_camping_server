@@ -5,13 +5,25 @@ const roomRouter = Router();
 
 //방 정보 가져오기
 roomRouter.get('/:roomID', async (req, res, next) => {
-  const { roomID } = req.query;
+  const { roomID } = req.params;
   try {
     const roomInfo = await roomService.getRoomInfo(roomID);
     if (!roomInfo) {
       throw new Error('해당하는 방의 정보가 없습니다.');
     }
     res.status(200).json(roomInfo);
+  } catch (error) {
+    next(error);
+  }
+});
+
+roomRouter.get('/', async (req, res, next) => {
+  try {
+    const rooms = await roomService.getAll();
+    if (!rooms) {
+      throw new Error('불러올 방이 없습니다.');
+    }
+    res.status(200).json(rooms);
   } catch (error) {
     next(error);
   }
