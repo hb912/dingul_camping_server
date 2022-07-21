@@ -77,7 +77,15 @@ export class BookingModel {
 
   // 모든 부킹 정보 가져오기
   async findAll() {
-    const bookings = await Booking.find({});
+    const bookings = await Booking.find({}).populate('roomID');
+    return bookings;
+  }
+
+  // 모든 부킹 요청 가져오기
+  async findRequests() {
+    const bookings = await Booking.find({ status: '예약 요청' }).populate(
+      'roomID'
+    );
     return bookings;
   }
 

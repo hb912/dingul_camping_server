@@ -14,6 +14,11 @@ class RoomService {
     return newRoom;
   }
 
+  async getAll() {
+    const rooms = await this.roomModel.findAll();
+    return rooms;
+  }
+
   async getRoomInfo(roomId) {
     const roomInfo = await this.roomModel.findById(roomId);
     return roomInfo;
