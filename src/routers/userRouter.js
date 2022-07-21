@@ -65,7 +65,7 @@ userRouter.get(
 
 //패스워드 확인
 userRouter.get('/confirmPW', loginRequired, async (req, res, next) => {
-  const { password } = req.body;
+  const { password } = req.query;
   try {
     const user = await userService.getUser(req.currentUserId);
     const correctPasswordHash = user.password;
