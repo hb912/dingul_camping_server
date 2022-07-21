@@ -71,4 +71,21 @@ reviewRouter.post('/create', loginRequired, async (req, res, next) => {
     next(e);
   }
 });
+
+reviewRouter.patch('/', async (req, res, next) => {
+  try {
+    const { reviewID, content, title, grade, name } = req.body;
+    const result = await reviewService.changeReview({
+      reviewID,
+      content,
+      title,
+      grade,
+      name,
+    });
+    res.status(200).json(result);
+  } catch (e) {
+    next(e);
+  }
+});
+
 export { reviewRouter };

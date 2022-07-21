@@ -39,6 +39,16 @@ class ReviewService {
     return review;
   }
 
+  async changeReview(reviewInfo) {
+    console.log(reviewInfo);
+    const review = await this.reviewModel.findById(reviewInfo.reviewID);
+    if (!review) {
+      throw new Error('해당 예약 내역이 없습니다.');
+    }
+    const result = this.reviewModel.update(reviewInfo);
+    return result;
+  }
+
 }
 
 const reviewService = new ReviewService(reviewModel);
