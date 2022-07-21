@@ -16,6 +16,21 @@ class ReviewService {
     return newReview;
   }
 
+  //유저의 리뷰 조회
+  async getByUserId(userID, perPage, page) {
+    if (!userID) {
+      throw new Error('유저 정보가 없습니다.');
+    }
+    const reviews = await this.reviewModel.findByUserId(userID, perPage, page);
+    return reviews;
+  }
+
+  //유저가 사용할 날짜별 가능한 룸
+  async getRoomReview(roomID, perPage, page) {
+    const reviews = await this.reviewModel.findByRoomId(roomID, perPage, page);
+    return reviews;
+  }
+
 }
 
 const reviewService = new ReviewService(reviewModel);
