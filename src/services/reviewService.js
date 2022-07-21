@@ -31,6 +31,28 @@ class ReviewService {
     return reviews;
   }
 
+  async getReview(reviewID) {
+    const review = await this.reviewModel.findById(reviewID);
+    if (!review) {
+      throw new Error('해당 리뷰가 없습니다.');
+    }
+    return review;
+  }
+
+  async changeReview(reviewInfo) {
+    console.log(reviewInfo);
+    const review = await this.reviewModel.findById(reviewInfo.reviewID);
+    if (!review) {
+      throw new Error('해당 예약 내역이 없습니다.');
+    }
+    const result = this.reviewModel.update(reviewInfo);
+    return result;
+  }
+
+  async delete(reviewID) {
+    const result = await this.reviewModel.delete(reviewID);
+    return result;
+  }
 }
 
 const reviewService = new ReviewService(reviewModel);

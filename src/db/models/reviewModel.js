@@ -30,9 +30,10 @@ export class ReviewModel {
     return newReview;
   }
 
-  async update({ userId, ...update }) {
+  async update({ reviewID, ...update }) {
     //리뷰 수정(아마도 비밀번호 변경 혹은 주소 변경)
-    const filter = { _id: userId };
+    console.log(reviewID, update);
+    const filter = { _id: reviewID };
     const option = { returnOriginal: false };
 
     const updatedReview = await Review.findOneAndUpdate(filter, update, option);

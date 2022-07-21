@@ -42,6 +42,16 @@ reviewRouter.get('/', async (req, res, next) => {
   }
 });
 
+reviewRouter.get('/:reviewID', async (req, res, next) => {
+  const { reviewID } = req.params;
+  try {
+    const review = await reviewService.getReview(reviewID);
+    res.status(200).json(review);
+  } catch (e) {
+    next(e);
+  }
+});
+
 reviewRouter.post('/create', loginRequired, async (req, res, next) => {
   const { roomID, bookingID, content, title, grade, name } = req.body;
   console.log(bookingID);
@@ -61,4 +71,31 @@ reviewRouter.post('/create', loginRequired, async (req, res, next) => {
     next(e);
   }
 });
+
+reviewRouter.patch('/', async (req, res, next) => {
+  try {
+    const { reviewID, content, title, grade, name } = req.body;
+    const result = await reviewService.changeReview({
+      reviewID,
+      content,
+      title,
+      grade,
+      name,
+    });
+    res.status(200).json(result);
+  } catch (e) {
+    next(e);
+  }
+});
+
+reviewRouter.delete('/:reviewID', async (req, res, next) => {
+  try {
+    const { reviewID } = req.params;
+    const result = await reviewService.delete(reviewID);
+    res.status(200).json(result);
+  } catch (e) {
+    next(e);
+  }
+});
+
 export { reviewRouter };
