@@ -5,7 +5,7 @@ const roomRouter = Router();
 
 //방 정보 가져오기
 roomRouter.get('/:roomID', async (req, res, next) => {
-  const { roomID } = req.query;
+  const { roomID } = req.params;
   try {
     const roomInfo = await roomService.getRoomInfo(roomID);
     if (!roomInfo) {

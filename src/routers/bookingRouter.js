@@ -87,8 +87,8 @@ bookingRouter.get('/byDates', async (req, res, next) => {
 bookingRouter.get('/byRoom', async (req, res, next) => {
   try {
     const { roomID } = req.query;
-    const rooms = await bookingService.getDatesByRoomID(roomID);
-    res.status(200).json(rooms);
+    const dates = await bookingService.getDatesByRoomID(roomID);
+    res.status(200).json(dates);
   } catch (e) {
     next(e);
   }
