@@ -70,6 +70,19 @@ bookingRouter.get('/user', loginRequired, async (req, res, next) => {
   }
 });
 
+bookingRouter.get('/confirm', loginRequired, async (req, res, next) => {
+  try {
+    const { startDate, endDate, roomID } = req.query;
+    const result = await bookingService.getExistBooking(
+      startDate,
+      endDate,
+      roomID
+    );
+    res.status(200).json(result);
+  } catch (e) {
+    next(e);
+  }
+});
 bookingRouter.get('/byDates', async (req, res, next) => {
   try {
     const { startDate, endDate, peopleNumber } = req.query;
