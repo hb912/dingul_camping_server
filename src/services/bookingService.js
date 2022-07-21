@@ -157,6 +157,16 @@ class BookingService {
     const result = await this.bookingModel.delete(bookingID);
     return result;
   }
+
+  async getBooks() {
+    const bookList = bookingModel.findAll();
+    return bookList;
+  }
+
+  async getBookRequests() {
+    const bookRequests = bookingModel.findRequests();
+    return bookRequests;
+  }
 }
 
 const bookingService = new BookingService(bookingModel);
