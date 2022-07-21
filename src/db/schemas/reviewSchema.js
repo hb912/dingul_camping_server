@@ -2,7 +2,7 @@ import { Schema } from 'mongoose';
 
 const ReviewSchema = new Schema(
   {
-    RoomID: {
+    roomID: {
       type: Schema.Types.ObjectID,
       required: true,
       ref: 'rooms',
@@ -12,7 +12,7 @@ const ReviewSchema = new Schema(
       required: true,
       ref: 'users',
     },
-    BookingID: {
+    bookingID: {
       type: Schema.Types.ObjectID,
       required: true,
     },
