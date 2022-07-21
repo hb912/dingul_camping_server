@@ -88,4 +88,14 @@ reviewRouter.patch('/', async (req, res, next) => {
   }
 });
 
+reviewRouter.delete('/:reviewID', async (req, res, next) => {
+  try {
+    const { reviewID } = req.params;
+    const result = await reviewService.delete(reviewID);
+    res.status(200).json(result);
+  } catch (e) {
+    next(e);
+  }
+});
+
 export { reviewRouter };

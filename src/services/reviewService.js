@@ -49,6 +49,10 @@ class ReviewService {
     return result;
   }
 
+  async delete(reviewID) {
+    const result = await this.reviewModel.delete(reviewID);
+    return result;
+  }
 }
 
 const reviewService = new ReviewService(reviewModel);
