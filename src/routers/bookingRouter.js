@@ -61,8 +61,8 @@ bookingRouter.post('/create', loginRequired, async (req, res, next) => {
 bookingRouter.get('/user', loginRequired, async (req, res, next) => {
   try {
     const userID = req.currentUserId;
-    const page = Number(req.body.page || 1);
-    const perPage = Number(req.body.perPage || 10);
+    const page = Number(req.query.page || 1);
+    const perPage = Number(req.query.perPage || 10);
     const bookings = await bookingService.getByUserId(userID, perPage, page);
     res.status(200).json(bookings);
   } catch (e) {
@@ -72,7 +72,7 @@ bookingRouter.get('/user', loginRequired, async (req, res, next) => {
 
 bookingRouter.get('/byDates', async (req, res, next) => {
   try {
-    const { startDate, endDate, peopleNumber } = req.body;
+    const { startDate, endDate, peopleNumber } = req.query;
     const rooms = await bookingService.getRoomsByDate(
       startDate,
       endDate,
@@ -86,7 +86,7 @@ bookingRouter.get('/byDates', async (req, res, next) => {
 
 bookingRouter.get('/byRoom', async (req, res, next) => {
   try {
-    const { roomID } = req.body;
+    const { roomID } = req.query;
     const rooms = await bookingService.getDatesByRoomID(roomID);
     res.status(200).json(rooms);
   } catch (e) {

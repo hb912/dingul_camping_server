@@ -17,6 +17,18 @@ roomRouter.get('/:roomID', async (req, res, next) => {
   }
 });
 
+roomRouter.get('/', async (req, res, next) => {
+  try {
+    const rooms = await roomService.getAll();
+    if (!rooms) {
+      throw new Error('불러올 방이 없습니다.');
+    }
+    res.status(200).json(rooms);
+  } catch (error) {
+    next(error);
+  }
+});
+
 roomRouter.post('/create', async (req, res, next) => {
   const { name, price, content, imgSrc, maxPeople, minPeople } = req.body;
   try {
