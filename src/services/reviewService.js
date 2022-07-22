@@ -31,8 +31,8 @@ class ReviewService {
     return reviews;
   }
 
-  async getReview(reviewID) {
-    const review = await this.reviewModel.findById(reviewID);
+  async getReviewBybooking(bookingID) {
+    const review = await this.reviewModel.findByBookingId(bookingID);
     if (!review) {
       throw new Error('해당 리뷰가 없습니다.');
     }

@@ -4,9 +4,9 @@ import { ReviewSchema } from '../schemas/reviewSchema';
 const Review = model('reviews', ReviewSchema);
 
 export class ReviewModel {
-  async findById(reviewID) {
+  async findByBookingId(bookingID) {
     //리뷰아이디로 리뷰 찾기(리뷰조회모달이 만약 있을시 사용)
-    const review = await Review.findOne({ _id: reviewID });
+    const review = await Review.findOne({ bookingID });
     return review;
   }
 

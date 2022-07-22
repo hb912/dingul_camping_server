@@ -10,7 +10,8 @@ export class BookingModel {
     const bookingInfos = await Booking.find({ userID })
       .sort({ startDate: -1 })
       .skip(perPage * (page - 1))
-      .limit(perPage);
+      .limit(perPage)
+      .populate('roomID');
     const totalPage = Math.ceil(total / perPage);
     return { bookingInfos, totalPage, page };
   }
@@ -103,7 +104,6 @@ export class BookingModel {
   }
 
   async updateReviewed(bookingID) {
-    const date = new Date();
     const filter = { _id: bookingID };
     const option = { returnOriginal: false };
     const updatedBooking = await Booking.findOneAndUpdate(

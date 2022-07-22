@@ -10,6 +10,11 @@ export class UserModel {
     return user;
   }
 
+  async findByName(name) {
+    const user = await User.findOne({ name });
+    return user;
+  }
+
   async findById(userId) {
     //특정 아이디를 가진 유저 찾기
     const user = await User.findOne({ _id: userId });
