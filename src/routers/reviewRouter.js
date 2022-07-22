@@ -42,10 +42,10 @@ reviewRouter.get('/', async (req, res, next) => {
   }
 });
 
-reviewRouter.get('/:reviewID', async (req, res, next) => {
-  const { reviewID } = req.params;
+reviewRouter.get('/', async (req, res, next) => {
+  const { bookingID } = req.query;
   try {
-    const review = await reviewService.getReview(reviewID);
+    const review = await reviewService.getReviewBybooking(bookingID);
     res.status(200).json(review);
   } catch (e) {
     next(e);
