@@ -15,6 +15,11 @@ export class UserModel {
     return user;
   }
 
+  async findAllByName(name) {
+    const user = await User.find({ name });
+    return user;
+  }
+
   async findById(userId) {
     //특정 아이디를 가진 유저 찾기
     const user = await User.findOne({ _id: userId });
@@ -39,6 +44,12 @@ export class UserModel {
   async findAll() {
     //모든 유저 가져오기(아마 관리자 모드에서)
     const users = await User.find({});
+    return users;
+  }
+
+  async findAllSorted() {
+    // 이름 순서대로 모든 유저 가져오기
+    const users = await User.find({}).sort({ name: 1 });
     return users;
   }
 
