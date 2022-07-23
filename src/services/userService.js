@@ -42,8 +42,18 @@ class UserService {
     return users;
   }
 
+  async getUsersSorted() {
+    const users = await this.userModel.findAllSorted();
+    return users;
+  }
+
   async getUserByName(name) {
     const user = await this.userModel.findByName(name);
+    return user;
+  }
+
+  async getUsersByName(name) {
+    const user = await this.userModel.findAllByName(name);
     return user;
   }
 

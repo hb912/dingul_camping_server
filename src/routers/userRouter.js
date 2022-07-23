@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { userService } from '../services';
 import { userService, mailer } from '../services';
 import passport from 'passport';
 import { loginRequired } from '../middleware/loginRequired';

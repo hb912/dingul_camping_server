@@ -90,6 +90,15 @@ export class BookingModel {
     return bookings;
   }
 
+  async findAllExceptRequests() {
+    const bookings = await Booking.find({
+      status: { $in: ['예약 완료', '예약 취소', '예약 취소 요청'] },
+    })
+      .sort({ startDate: 1 })
+      .populate('roomID');
+    return bookings;
+  }
+
   //주문상태변경
   async updateStatus({ bookingID, status }) {
     const filter = { _id: bookingID };
