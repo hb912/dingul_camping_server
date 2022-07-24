@@ -167,6 +167,11 @@ class BookingService {
     const bookRequests = bookingModel.findRequests();
     return bookRequests;
   }
+
+  async getBooksExceptRequests() {
+    const booklist = bookingModel.findAllExceptRequests();
+    return booklist;
+  }
 }
 
 const bookingService = new BookingService(bookingModel);

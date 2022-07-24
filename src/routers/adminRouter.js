@@ -6,10 +6,21 @@ import { adminRequired } from '../middleware/adminRequired';
 
 const adminRouter = Router();
 
-// 유저 리스트 가져오기
+// 전체 유저 리스트 가져오기
 adminRouter.get('/user', async (req, res, next) => {
   try {
-    const userList = await userService.getUsers();
+    const userList = await userService.getUsersSorted();
+    res.status(200).json(userList);
+  } catch (e) {
+    next(e);
+  }
+});
+
+// 유저 리스트 이름으로 찾기
+adminRouter.get('/userByName', async (req, res, next) => {
+  try {
+    const { name } = req.query;
+    const userList = await userService.getUsersByName(name);
     res.status(200).json(userList);
   } catch (e) {
     next(e);
@@ -25,15 +36,26 @@ adminRouter.get('/book', async (req, res, next) => {
     next(e);
   }
 });
-// // 예약 요청 리스트 가져오기
-// adminRouter.get('/book', async (req, res, next) => {
-//   try {
-//     const bookRequestLists = await bookingService.getBookRequests();
-//     res.status(200).json(bookRequestLists);
-//   } catch (e) {
-//     next(e);
-//   }
-// });
+
+// 예약 요청 리스트 가져오기
+adminRouter.get('/bookRequests', async (req, res, next) => {
+  try {
+    const bookRequestLists = await bookingService.getBookRequests();
+    res.status(200).json(bookRequestLists);
+  } catch (e) {
+    next(e);
+  }
+});
+
+// 예약 요청을 제외한 리스트 가져오기
+adminRouter.get('/bookExceptRequests', async (req, res, next) => {
+  try {
+    const bookLists = await bookingService.getBooksExceptRequests();
+    res.status(200).json(bookLists);
+  } catch (e) {
+    next(e);
+  }
+});
 
 // 회원 탈퇴 처리
 adminRouter.delete('/user', async (req, res, next) => {
