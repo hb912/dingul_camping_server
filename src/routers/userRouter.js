@@ -116,14 +116,18 @@ userRouter.get('/logout', loginRequired, async (req, res) => {
 
   const { email } = req.body;
 userRouter.post('/newPassword', async (req, res, next) => {
+  const { email, name } = req.body;
   const number = Math.random().toString(18).slice(2);
   try {
-    const userEmail = await userService.getUserByEmail(email);
-    const saveKey = await redisClient.setEx(number, 180, userEmail);
+    const user = await userService.getUserByEmail(email);
+    if (name !== user.name) {
+      throw new Error('이름이 일치하지 않습니다.');
+    }
+    const saveKey = await redisClient.setEx(number, 180, user.email);
     if (!saveKey) {
       throw new Error('redis 저장에 실패했습니다.');
     }
-    const result = await mailer(email, number);
+    const result = await mailer(user.email, number);
     res.status(200).json(result);
   } catch (e) {
     next(e);
@@ -131,6 +135,7 @@ userRouter.post('/newPassword', async (req, res, next) => {
 });
 
 userRouter.get('/findPW/:redisKey', async (req, res, next) => {
+userRouter.get('/newPassword/:redisKey', async (req, res, next) => {
   const { redisKey } = req.params;
   try {
     const userID = await redisClient.get(redisKey);
