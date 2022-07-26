@@ -33,21 +33,18 @@ userRouter.post('/register', async (req, res, next) => {
   }
 });
 
-userRouter.post('/login', async (req, res, next) => {
-  passport.authenticate('local', { session: false }, (err, user, info) => {
-    console.log(info);
-    if (err || !user) {
-      return res.status(400).json(err.message);
-    }
-
-    req.login(user, { session: false }, async (err) => {
-      if (err) {
-        return res.status(400).json({ message: err });
-      }
-      const token = await userService.getUserToken(user);
-      res.status(200).json({ message: 'OK', token });
-    });
-  })(req, res, next);
+userRouter.post('/login', async function (req, res) {
+  try {
+    const { email, password } = req.body;
+    const { accessToken, role, refreshToken } =
+      await userService.verifyPassword(email, password);
+    res.cookie('accessToken', accessToken, { maxAge: 90000 });
+    res.cookie('userRole', role);
+    res.cookie('refreshToken', refreshToken, { maxAge: 90000 });
+    res.status(200).send({ message: 'success' });
+  } catch (err) {
+    res.status(400).send({ message: err + ' : login failed' });
+  }
 });
 
 //처음 프론트가 보내줄 get 경로
@@ -106,11 +103,11 @@ userRouter.get('/user', loginRequired, async (req, res, next) => {
   }
 });
 
-userRouter.get('/logout', loginRequired, async (req, res) => {
-  req.logout();
-  req.session.save(function () {
-    res.status(200).json({ message: 'Ok' });
-  });
+userRouter.get('/logout', refresh, async (req, res) => {
+  res.clearCookie('accessToken');
+  res.clearCookie('refreshToken');
+  res.clearCookie('userRole');
+  res.status(200).json({ message: 'Ok' });
 });
 
   const { email } = req.body;
