@@ -75,9 +75,16 @@ userRouter.get(
       req.user._id
     );
     const role = req.user.role;
-    res.cookie('accessToken', accessToken, { maxAge: 90000 });
+    res.cookie('accessToken', accessToken, {
+      maxAge: 90000,
+      sameSite: 'none',
+      secure: true,
+    });
     res.cookie('userRole', role);
-    res.cookie('refreshToken', refreshToken, { maxAge: 90000 });
+    res.cookie('refreshToken', refreshToken, {
+      maxAge: 90000,
+      domain: 'http://localhost:3000/',
+    });
     // res.status(200).send({ message: 'success' });
     res.redirect(`http://localhost:3000/`);
   }
