@@ -90,15 +90,15 @@ export class BookingModel {
 
   // 모든 부킹 요청 가져오기
   async findRequests() {
-    const bookings = await Booking.find({ status: '예약 요청' }).populate(
-      'roomID'
-    );
+    const bookings = await Booking.find({
+      status: { $in: ['예약 요청', '예약 취소 요청'] },
+    }).populate('roomID');
     return bookings;
   }
 
   async findAllExceptRequests() {
     const bookings = await Booking.find({
-      status: { $in: ['예약 취소 요청'] },
+      status: '예약 완료',
     })
       .sort({ startDate: 1 })
       .populate('roomID');
