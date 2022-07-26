@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import { bookingService } from '../services';
-import { loginRequired } from '../middleware/loginRequired';
+import { refresh } from '../middleware';
 
 const bookingRouter = Router();
 
-bookingRouter.post('/create', loginRequired, async (req, res, next) => {
+bookingRouter.post('/create', refresh, async (req, res, next) => {
   const {
     startDate,
     endDate,
@@ -38,7 +38,7 @@ bookingRouter.post('/create', loginRequired, async (req, res, next) => {
   }
 });
 
-bookingRouter.get('/user', loginRequired, async (req, res, next) => {
+bookingRouter.get('/user', refresh, async (req, res, next) => {
   try {
     const userID = req.currentUserId;
     const page = Number(req.query.page || 1);
@@ -50,7 +50,7 @@ bookingRouter.get('/user', loginRequired, async (req, res, next) => {
   }
 });
 
-bookingRouter.get('/confirm', loginRequired, async (req, res, next) => {
+bookingRouter.get('/confirm', refresh, async (req, res, next) => {
   const { startDate, endDate, roomID } = req.query;
 
   const date = new Date();
@@ -93,7 +93,7 @@ bookingRouter.get('/byRoom', async (req, res, next) => {
   }
 });
 
-bookingRouter.patch('/cancel', loginRequired, async (req, res, next) => {
+bookingRouter.patch('/cancel', refresh, async (req, res, next) => {
   const { bookingID } = req.body;
   try {
     const result = await bookingService.changeStatus(bookingID, '취소 요청');

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { userService, mailer } from '../services';
 import passport from 'passport';
-import { loginRequired } from '../middleware/loginRequired';
+import { refresh } from '../middleware';
 import bcrypt from 'bcrypt';
 import * as redis from 'redis';
 
@@ -84,7 +84,7 @@ userRouter.get(
 );
 
 //패스워드 확인
-userRouter.get('/confirmPW', loginRequired, async (req, res, next) => {
+userRouter.get('/confirmPW', refresh, async (req, res, next) => {
   const { password } = req.query;
   try {
     const user = await userService.getUser(req.currentUserId);
@@ -104,7 +104,7 @@ userRouter.get('/confirmPW', loginRequired, async (req, res, next) => {
   }
 });
 
-userRouter.get('/user', loginRequired, async (req, res, next) => {
+userRouter.get('/user', refresh, async (req, res, next) => {
   if (!req.currentUserId) {
     res.status(400).json('유저정보를 찾을 수 없습니다.');
   }
@@ -123,7 +123,6 @@ userRouter.get('/logout', refresh, async (req, res) => {
   res.status(200).json({ message: 'Ok' });
 });
 
-  const { email } = req.body;
 userRouter.post('/newPassword', async (req, res, next) => {
   const { email, name } = req.body;
   const number = Math.random().toString(18).slice(2);
@@ -143,7 +142,6 @@ userRouter.post('/newPassword', async (req, res, next) => {
   }
 });
 
-userRouter.get('/findPW/:redisKey', async (req, res, next) => {
 userRouter.get('/newPassword/:redisKey', async (req, res, next) => {
   const { redisKey } = req.params;
   try {
@@ -217,7 +215,7 @@ userRouter.patch('/user', refresh, async (req, res, next) => {
   }
 });
 
-userRouter.delete('/user', loginRequired, async (req, res, next) => {
+userRouter.delete('/user', refresh, async (req, res, next) => {
   if (!req.currentUserId) {
     res
       .status(400)
