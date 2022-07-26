@@ -166,7 +166,28 @@ userRouter.get('/findEmail', async (req, res, next) => {
   }
 });
 
-userRouter.patch('/user', loginRequired, async (req, res, next) => {
+userRouter.patch('/password', async (req, res, next) => {
+  try {
+    const { password, email, redisKey } = req.body;
+    await redisClient.del(redisKey);
+    const user = await userService.getUserByEmail(email);
+    if (!user) {
+      throw new Error('유저 정보를 찾을 수 없습니다');
+    }
+    const result = await userService.update({
+      password,
+      userID: user._id,
+    });
+    if (!result) {
+      throw new Error('유저정보를 찾을 수 없습니다.');
+    }
+    res.status(200).json(result);
+  } catch (e) {
+    next(e);
+  }
+});
+
+userRouter.patch('/user', refresh, async (req, res, next) => {
   try {
     const { name, email, password, phoneNumber } = req.body;
     const userID = req.currentUserId;
