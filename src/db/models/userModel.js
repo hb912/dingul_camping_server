@@ -26,12 +26,15 @@ export class UserModel {
     return user;
   }
 
+  async findByToken(refreshToken) {
+    const user = await User.findOne({ refreshToken });
+    return user;
+  }
+
   async findKakaoUser(userId) {
-    console.log(userId);
     const user = await User.findOne({
       where: { email: userId, provider: 'kakao' },
     });
-    console.log(user);
     return user;
   }
 
@@ -55,14 +58,14 @@ export class UserModel {
 
   async update({ userId, update }) {
     //유저 정보 수정(아마도 비밀번호 변경 혹은 주소 변경)
-    const filter = { _id: userId };
+    const filter = { _id: userID };
     const option = { returnOriginal: false };
 
     const updatedUser = await User.findOneAndUpdate(filter, update, option);
     return updatedUser;
   }
 
-  async delete(userId) {
+  async deleteUser(userId) {
     const deleteUser = await User.deleteOne({ _id: userId });
     return deleteUser;
   }

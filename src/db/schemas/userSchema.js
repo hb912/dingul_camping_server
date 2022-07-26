@@ -22,6 +22,10 @@ const UserSchema = new Schema(
     provider: {
       type: String,
     },
+    refreshToken: {
+      type: String,
+      default: '',
+    },
   },
   {
     collection: 'users',

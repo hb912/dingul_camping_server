@@ -1,25 +1,10 @@
 import { Router } from 'express';
 import { bookingService } from '../services';
-import { loginRequired } from '../middleware/loginRequired';
+import { refresh } from '../middleware';
 
 const bookingRouter = Router();
 
-// {
-//     "objectID": "book1",
-//     "bookingDate": "2022-07-31 ~ 2022-08-02",
-//     "userID": "a1b2c3",
-//     "processDate": ["5", "6", "7"],
-//     "RoomID": "room1",
-//     "peopleNum": 3,
-//     "requirements": "요구사항 없음",
-//     "price": 30000,
-//     "state": "예약요청",
-//     "name": "김응애",
-//     "email": "asdf@asdf.com",
-//     "phone": "010-0101-1234"
-//   },
-
-bookingRouter.post('/create', loginRequired, async (req, res, next) => {
+bookingRouter.post('/create', refresh, async (req, res, next) => {
   const {
     startDate,
     endDate,
@@ -32,14 +17,9 @@ bookingRouter.post('/create', loginRequired, async (req, res, next) => {
     phoneNumber,
   } = req.body;
   const userID = req.currentUserId;
-  const date = new Date();
-  date.setDate(date.getDate() - 1);
 
   try {
-    if (new Date(startDate) < date)
-      return res.status(400).json('과거의 예약은 진행할 수 없습니다.');
-
-    const newUser = await bookingService.addBooking({
+    const newBooking = await bookingService.addBooking({
       startDate,
       endDate,
       name,
@@ -52,13 +32,13 @@ bookingRouter.post('/create', loginRequired, async (req, res, next) => {
       userID,
     });
 
-    res.status(201).json(newUser);
+    res.status(201).json(newBooking);
   } catch (error) {
     next(error);
   }
 });
 
-bookingRouter.get('/user', loginRequired, async (req, res, next) => {
+bookingRouter.get('/user', refresh, async (req, res, next) => {
   try {
     const userID = req.currentUserId;
     const page = Number(req.query.page || 1);
@@ -70,9 +50,14 @@ bookingRouter.get('/user', loginRequired, async (req, res, next) => {
   }
 });
 
-bookingRouter.get('/confirm', loginRequired, async (req, res, next) => {
+bookingRouter.get('/confirm', refresh, async (req, res, next) => {
+  const { startDate, endDate, roomID } = req.query;
+
+  const date = new Date();
+  date.setDate(date.getDate() - 1);
   try {
-    const { startDate, endDate, roomID } = req.query;
+    if (new Date(startDate) < date)
+      throw new Error('과거의 예약은 진행할 수 없습니다.');
     const result = await bookingService.getExistBooking(
       startDate,
       endDate,
@@ -83,6 +68,7 @@ bookingRouter.get('/confirm', loginRequired, async (req, res, next) => {
     next(e);
   }
 });
+
 bookingRouter.get('/byDates', async (req, res, next) => {
   try {
     const { startDate, endDate, peopleNumber } = req.query;
@@ -107,7 +93,7 @@ bookingRouter.get('/byRoom', async (req, res, next) => {
   }
 });
 
-bookingRouter.patch('/cancel', loginRequired, async (req, res, next) => {
+bookingRouter.patch('/cancel', refresh, async (req, res, next) => {
   const { bookingID } = req.body;
   try {
     const result = await bookingService.changeStatus(bookingID, '취소 요청');
