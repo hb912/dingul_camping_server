@@ -11,27 +11,18 @@ import {
 import passport from 'passport';
 import passportConfig from './passport';
 // import MongoStore from 'connect-mongo';
-import session from 'express-session';
 import { errorHandler } from './middleware';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 passportConfig();
 
-app.use(
-  session({
-    secret: 'SECRET',
-    resave: false,
-    saveUninitialized: true,
-    // store: MongoStore.create({
-    //   mongoUrl: process.env.MONGODB_URL,
-    // }),
-  })
-);
 app.use(passport.initialize());
 app.use('/api', userRouter);
 app.use('/api/room', roomRouter);
