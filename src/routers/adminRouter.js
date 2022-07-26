@@ -64,7 +64,7 @@ adminRouter.delete('/user', async (req, res, next) => {
 // 예약 처리
 adminRouter.patch('/book', async (req, res, next) => {
   try {
-    const { bookingID, status } = req.body;
+    const { bookingID, status } = req.body.data;
     const changeStatus = await bookingService.changeStatus(bookingID, status);
     res.status(200).json(changeStatus);
   } catch (e) {
@@ -72,9 +72,9 @@ adminRouter.patch('/book', async (req, res, next) => {
   }
 });
 
-adminRouter.delete('/book/:bookingID', async (req, res, next) => {
+adminRouter.delete('/book', async (req, res, next) => {
   try {
-    const { bookingID } = req.params;
+    const { bookingID } = req.body;
     const result = await bookingService.delete(bookingID);
     res.status(200).json(result);
   } catch (e) {
