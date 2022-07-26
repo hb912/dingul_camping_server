@@ -132,7 +132,7 @@ async function mailer(email, randomNumber) {
             color: rgba(0, 0, 0, 0.7);
           "
         >
-          위의 링크는 메일이 발송한 시점부터<span style="color: #524fa1"
+          위의 링크는 메일이 발송한 시점부터 <span style="color: #524fa1"
             >48시간</span
           >만 유효 합니다.
         </div>

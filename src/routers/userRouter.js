@@ -115,15 +115,15 @@ userRouter.get('/logout', loginRequired, async (req, res) => {
   });
 });
 
-userRouter.post('/findPW', async (req, res, next) => {
   const { email } = req.body;
+userRouter.post('/newPassword', async (req, res, next) => {
   const number = Math.random().toString(18).slice(2);
   try {
     const userEmail = await userService.getUserByEmail(email);
     const saveKey = await redisClient.setEx(number, 180, userEmail);
     console.log(saveKey);
     if (!saveKey) {
-      res.status(400).json({ error: 'redis 저장에 실패했습니다.' });
+      throw new Error('redis 저장에 실패했습니다.');
     }
     const result = await mailer(email, number);
     res.status(200).json(result);
@@ -137,7 +137,7 @@ userRouter.get('/findPW/:redisKey', async (req, res, next) => {
   try {
     const userID = await redisClient.get(redisKey);
     if (!userID) {
-      res.status(400).json({ error: '유효기간이 지났거나 잘못된 링크입니다.' });
+      throw new Error('유효기간이 지났거나 잘못된 링크입니다.');
     }
     res.status(200).json(userID);
   } catch (e) {
@@ -148,12 +148,14 @@ userRouter.get('/findPW/:redisKey', async (req, res, next) => {
 userRouter.get('/findEmail', async (req, res, next) => {
   const { name } = req.query;
   if (!name) {
-    res.status(400).json('이름을 입력해 주세요.');
+    res.status(400).json({ result: 'error', reason: '이름을 입력해 주세요.' });
   }
   try {
     const user = await userService.getUserByName(name);
     if (!user) {
-      res.status(400).json({ error: '해당 유저가 없습니다.' });
+      res
+        .status(400)
+        .json({ result: 'error', reason: '유저정보를 찾을 수 없습니다.' });
     }
     const { email } = user;
     res.status(200).json(email);
@@ -173,6 +175,9 @@ userRouter.patch('/user', loginRequired, async (req, res, next) => {
       phoneNumber,
       userID,
     });
+    if (!result) {
+      throw new Error('유저정보를 찾을 수 없습니다.');
+    }
     res.status(200).json(result);
   } catch (e) {
     next(e);
@@ -181,10 +186,12 @@ userRouter.patch('/user', loginRequired, async (req, res, next) => {
 
 userRouter.delete('/user', loginRequired, async (req, res, next) => {
   if (!req.currentUserId) {
-    res.status(400).json('유저정보를 찾을 수 없습니다.');
+    res
+      .status(400)
+      .json({ result: 'error', reason: '유저정보를 찾을 수 없습니다.' });
   }
   try {
-    const result = await userService.delete(req.currentUserId);
+    const result = await userService.deleteUser(req.currentUserId);
     res.status(200).json(result);
   } catch (e) {
     next(e);
