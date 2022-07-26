@@ -105,9 +105,9 @@ bookingRouter.patch('/cancel', refresh, async (req, res, next) => {
   try {
     const result = await bookingService.changeStatus(
       bookingID,
-      STATUS.CANCEL_STATUS
+      STATUS.CANCEL_REQUEST
     );
-    if (result.status !== STATUS.CANCEL_STATUS)
+    if (result.status !== STATUS.CANCEL_REQUEST)
       throw new Error('업데이트에 실패했습니다.');
     res.status(200).json(result);
   } catch (e) {
