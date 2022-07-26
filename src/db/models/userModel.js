@@ -15,6 +15,11 @@ export class UserModel {
     return user;
   }
 
+  async findAllByName(name) {
+    const user = await User.find({ name });
+    return user;
+  }
+
   async findById(userId) {
     //특정 아이디를 가진 유저 찾기
     const user = await User.findOne({ _id: userId });
@@ -45,7 +50,13 @@ export class UserModel {
     return users;
   }
 
-  async update({ userID, update }) {
+  async findAllSorted() {
+    // 이름 순서대로 모든 유저 가져오기
+    const users = await User.find({}).sort({ name: 1 });
+    return users;
+  }
+
+  async update({ userId, update }) {
     //유저 정보 수정(아마도 비밀번호 변경 혹은 주소 변경)
     const filter = { _id: userID };
     const option = { returnOriginal: false };
