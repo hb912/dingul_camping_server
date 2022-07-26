@@ -32,14 +32,9 @@ bookingRouter.post('/create', loginRequired, async (req, res, next) => {
     phoneNumber,
   } = req.body;
   const userID = req.currentUserId;
-  const date = new Date();
-  date.setDate(date.getDate() - 1);
 
   try {
-    if (new Date(startDate) < date)
-      return res.status(400).json('과거의 예약은 진행할 수 없습니다.');
-
-    const newUser = await bookingService.addBooking({
+    const newBooking = await bookingService.addBooking({
       startDate,
       endDate,
       name,
@@ -52,7 +47,7 @@ bookingRouter.post('/create', loginRequired, async (req, res, next) => {
       userID,
     });
 
-    res.status(201).json(newUser);
+    res.status(201).json(newBooking);
   } catch (error) {
     next(error);
   }
@@ -71,8 +66,13 @@ bookingRouter.get('/user', loginRequired, async (req, res, next) => {
 });
 
 bookingRouter.get('/confirm', loginRequired, async (req, res, next) => {
+  const { startDate, endDate, roomID } = req.query;
+
+  const date = new Date();
+  date.setDate(date.getDate() - 1);
   try {
-    const { startDate, endDate, roomID } = req.query;
+    if (new Date(startDate) < date)
+      throw new Error('과거의 예약은 진행할 수 없습니다.');
     const result = await bookingService.getExistBooking(
       startDate,
       endDate,
@@ -83,6 +83,7 @@ bookingRouter.get('/confirm', loginRequired, async (req, res, next) => {
     next(e);
   }
 });
+
 bookingRouter.get('/byDates', async (req, res, next) => {
   try {
     const { startDate, endDate, peopleNumber } = req.query;

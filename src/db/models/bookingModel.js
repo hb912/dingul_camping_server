@@ -6,7 +6,6 @@ const Booking = model('booking', BookingSchema);
 export class BookingModel {
   async findByUserId(userID, perPage, page) {
     const total = await Booking.countDocuments({ userID });
-    console.log(total, perPage, page);
     const bookingInfos = await Booking.find({ userID })
       .sort({ startDate: -1 })
       .skip(perPage * (page - 1))
@@ -42,15 +41,13 @@ export class BookingModel {
     }
 
     const dates = Object.values(findDates);
-    const joinDates = new Array();
-    dates.map((date) => {
-      joinDates.push(date.processDate);
+    const joinDates = dates.map((date) => {
+      return date.processDate;
     });
-    const result = joinDates.reduce(function (acc, cur) {
+    const bookedDates = joinDates.reduce(function (acc, cur) {
       return [...acc, ...cur];
     });
-    console.log(result);
-    return result;
+    return bookedDates;
   }
 
   async findRoomsByDate(stringDates) {
@@ -103,7 +100,6 @@ export class BookingModel {
   async updateStatus({ bookingID, status }) {
     const filter = { _id: bookingID };
     const option = { returnOriginal: false };
-    console.log(status);
     const updatedBooking = await Booking.findOneAndUpdate(
       filter,
       { status },

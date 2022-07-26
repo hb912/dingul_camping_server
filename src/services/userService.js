@@ -96,7 +96,7 @@ class UserService {
   }
 
   async deleteUser(userId) {
-    const result = await this.userModel.delete(userId);
+    const result = await this.userModel.deleteUser(userId);
     return result;
   }
 }
