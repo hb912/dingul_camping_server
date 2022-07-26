@@ -1,13 +1,10 @@
 import { Router } from 'express';
 import { userService, bookingService } from '../services';
-import { passport } from 'passport';
-import { loginRequired } from '../middleware/loginRequired';
-import { adminRequired } from '../middleware/adminRequired';
 
 const adminRouter = Router();
 
 // 전체 유저 리스트 가져오기
-adminRouter.get('/user', async (req, res, next) => {
+adminRouter.get('/users', async (req, res, next) => {
   try {
     const userList = await userService.getUsersSorted();
     res.status(200).json(userList);
@@ -17,7 +14,7 @@ adminRouter.get('/user', async (req, res, next) => {
 });
 
 // 유저 리스트 이름으로 찾기
-adminRouter.get('/userByName', async (req, res, next) => {
+adminRouter.get('/user', async (req, res, next) => {
   try {
     const { name } = req.query;
     const userList = await userService.getUsersByName(name);
@@ -27,7 +24,7 @@ adminRouter.get('/userByName', async (req, res, next) => {
   }
 });
 
-// 예약 리스트 가져오기
+// 예약 리스트 전부 가져오기
 adminRouter.get('/book', async (req, res, next) => {
   try {
     const bookList = await bookingService.getBooks();
@@ -37,21 +34,17 @@ adminRouter.get('/book', async (req, res, next) => {
   }
 });
 
-// 예약 요청 리스트 가져오기
-adminRouter.get('/bookRequests', async (req, res, next) => {
+// 예약 리스트 나눠서 가져오기
+adminRouter.get('/books', async (req, res, next) => {
   try {
-    const bookRequestLists = await bookingService.getBookRequests();
-    res.status(200).json(bookRequestLists);
-  } catch (e) {
-    next(e);
-  }
-});
-
-// 예약 요청을 제외한 리스트 가져오기
-adminRouter.get('/bookExceptRequests', async (req, res, next) => {
-  try {
-    const bookLists = await bookingService.getBooksExceptRequests();
-    res.status(200).json(bookLists);
+    const { request } = req.query;
+    if (request === 'true') {
+      const bookRequestLists = await bookingService.getBookRequests();
+      res.status(200).json(bookRequestLists);
+    } else {
+      const bookLists = await bookingService.getBooksExceptRequests();
+      res.status(200).json(bookLists);
+    }
   } catch (e) {
     next(e);
   }
@@ -71,9 +64,19 @@ adminRouter.delete('/user', async (req, res, next) => {
 // 예약 처리
 adminRouter.patch('/book', async (req, res, next) => {
   try {
-    const { bookingID, status } = req.body.data;
+    const { bookingID, status } = req.body;
     const changeStatus = await bookingService.changeStatus(bookingID, status);
     res.status(200).json(changeStatus);
+  } catch (e) {
+    next(e);
+  }
+});
+
+adminRouter.delete('/book/:bookingID', async (req, res, next) => {
+  try {
+    const { bookingID } = req.params;
+    const result = await bookingService.delete(bookingID);
+    res.status(200).json(result);
   } catch (e) {
     next(e);
   }
