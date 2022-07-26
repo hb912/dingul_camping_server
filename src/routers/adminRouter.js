@@ -39,7 +39,7 @@ adminRouter.get('/books', async (req, res, next) => {
   try {
     const { request } = req.query;
 
-    if (request == true) {
+    if (request === 'true') {
       const bookRequestLists = await bookingService.getBookRequests();
       res.status(200).json(bookRequestLists);
     } else {
