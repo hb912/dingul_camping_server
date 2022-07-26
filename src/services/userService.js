@@ -67,7 +67,7 @@ class UserService {
     if (!user) {
       throw new Error('가입 내역이 없는 이메일입니다.');
     }
-    return user.email;
+    return user;
   }
 
   // 유저정보 수정, 현재 비밀번호가 있어야 수정 가능함.
@@ -85,7 +85,6 @@ class UserService {
       const newPasswordHash = await bcrypt.hash(password, 10);
       update.password = newPasswordHash;
     }
-    console.log(update);
     // 업데이트 진행
     const updateUser = await this.userModel.update({
       userID,
@@ -96,7 +95,7 @@ class UserService {
   }
 
   async deleteUser(userId) {
-    const result = await this.userModel.delete(userId);
+    const result = await this.userModel.deleteUser(userId);
     return result;
   }
 }

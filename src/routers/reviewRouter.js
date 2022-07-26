@@ -3,33 +3,7 @@ import { loginRequired } from '../middleware';
 import { reviewService } from '../services';
 
 const reviewRouter = Router();
-// roomID: {
-//   type: Schema.Types.ObjectID,
-//   required: true,
-//   ref: 'rooms',
-// },
-// userID: {
-//   type: Schema.Types.ObjectID,
-//   required: true,
-//   ref: 'users',
-// },
-// BookingID: {
-//   type: Schema.Types.ObjectID,
-//   required: true,
-// },
-// title: {
-//   type: String,
-//   required: true,
-// },
-// content: {
-//   type: String,
-// },
-// grade: {
-//   type: Number,
-//   required: true,
-// },
-// cron => scheduler node scheduler
-//방 정보 가져오기
+
 reviewRouter.get('/', async (req, res, next) => {
   const { roomID } = req.query;
   const page = Number(req.query.page || 1);
@@ -42,7 +16,7 @@ reviewRouter.get('/', async (req, res, next) => {
   }
 });
 
-reviewRouter.get('/', async (req, res, next) => {
+reviewRouter.get('/booking', async (req, res, next) => {
   const { bookingID } = req.query;
   try {
     const review = await reviewService.getReviewBybooking(bookingID);
@@ -54,7 +28,6 @@ reviewRouter.get('/', async (req, res, next) => {
 
 reviewRouter.post('/create', loginRequired, async (req, res, next) => {
   const { roomID, bookingID, content, title, grade, name } = req.body;
-  console.log(bookingID);
   const userID = req.currentUserId;
   try {
     const newReview = await reviewService.addReview({
@@ -74,7 +47,11 @@ reviewRouter.post('/create', loginRequired, async (req, res, next) => {
 
 reviewRouter.patch('/', async (req, res, next) => {
   try {
-    const { reviewID, content, title, grade, name } = req.body;
+    const { reviewID } = req.params;
+    if (!reviewID) {
+      throw new Error('해당 리뷰가 없습니다');
+    }
+    const { content, title, grade, name } = req.body;
     const result = await reviewService.changeReview({
       reviewID,
       content,

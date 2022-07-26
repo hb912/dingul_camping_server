@@ -65,7 +65,6 @@ userRouter.get(
     failureRedirect: '/',
   }),
   async (req, res) => {
-    console.log(`req:${req.user}`);
     if (!req.user) {
       return res.status(400).json('error');
     }
@@ -114,17 +113,20 @@ userRouter.get('/logout', loginRequired, async (req, res) => {
   });
 });
 
-userRouter.post('/findPW', async (req, res, next) => {
   const { email } = req.body;
+userRouter.post('/newPassword', async (req, res, next) => {
+  const { email, name } = req.body;
   const number = Math.random().toString(18).slice(2);
   try {
-    const userEmail = await userService.getUserByEmail(email);
-    const saveKey = await redisClient.setEx(number, 180, userEmail);
-    console.log(saveKey);
-    if (!saveKey) {
-      res.status(400).json({ error: 'redis 저장에 실패했습니다.' });
+    const user = await userService.getUserByEmail(email);
+    if (name !== user.name) {
+      throw new Error('이름이 일치하지 않습니다.');
     }
-    const result = await mailer(email, number);
+    const saveKey = await redisClient.setEx(number, 180, user.email);
+    if (!saveKey) {
+      throw new Error('redis 저장에 실패했습니다.');
+    }
+    const result = await mailer(user.email, number);
     res.status(200).json(result);
   } catch (e) {
     next(e);
@@ -132,11 +134,12 @@ userRouter.post('/findPW', async (req, res, next) => {
 });
 
 userRouter.get('/findPW/:redisKey', async (req, res, next) => {
+userRouter.get('/newPassword/:redisKey', async (req, res, next) => {
   const { redisKey } = req.params;
   try {
     const userID = await redisClient.get(redisKey);
     if (!userID) {
-      res.status(400).json({ error: '유효기간이 지났거나 잘못된 링크입니다.' });
+      throw new Error('유효기간이 지났거나 잘못된 링크입니다.');
     }
     res.status(200).json(userID);
   } catch (e) {
@@ -147,12 +150,14 @@ userRouter.get('/findPW/:redisKey', async (req, res, next) => {
 userRouter.get('/findEmail', async (req, res, next) => {
   const { name } = req.query;
   if (!name) {
-    res.status(400).json('이름을 입력해 주세요.');
+    res.status(400).json({ result: 'error', reason: '이름을 입력해 주세요.' });
   }
   try {
     const user = await userService.getUserByName(name);
     if (!user) {
-      res.status(400).json({ error: '해당 유저가 없습니다.' });
+      res
+        .status(400)
+        .json({ result: 'error', reason: '유저정보를 찾을 수 없습니다.' });
     }
     const { email } = user;
     res.status(200).json(email);
@@ -161,7 +166,28 @@ userRouter.get('/findEmail', async (req, res, next) => {
   }
 });
 
-userRouter.patch('/user', loginRequired, async (req, res, next) => {
+userRouter.patch('/password', async (req, res, next) => {
+  try {
+    const { password, email, redisKey } = req.body;
+    await redisClient.del(redisKey);
+    const user = await userService.getUserByEmail(email);
+    if (!user) {
+      throw new Error('유저 정보를 찾을 수 없습니다');
+    }
+    const result = await userService.update({
+      password,
+      userID: user._id,
+    });
+    if (!result) {
+      throw new Error('유저정보를 찾을 수 없습니다.');
+    }
+    res.status(200).json(result);
+  } catch (e) {
+    next(e);
+  }
+});
+
+userRouter.patch('/user', refresh, async (req, res, next) => {
   try {
     const { name, email, password, phoneNumber } = req.body;
     const userID = req.currentUserId;
@@ -172,6 +198,9 @@ userRouter.patch('/user', loginRequired, async (req, res, next) => {
       phoneNumber,
       userID,
     });
+    if (!result) {
+      throw new Error('유저정보를 찾을 수 없습니다.');
+    }
     res.status(200).json(result);
   } catch (e) {
     next(e);
@@ -180,10 +209,12 @@ userRouter.patch('/user', loginRequired, async (req, res, next) => {
 
 userRouter.delete('/user', loginRequired, async (req, res, next) => {
   if (!req.currentUserId) {
-    res.status(400).json('유저정보를 찾을 수 없습니다.');
+    res
+      .status(400)
+      .json({ result: 'error', reason: '유저정보를 찾을 수 없습니다.' });
   }
   try {
-    const result = await userService.delete(req.currentUserId);
+    const result = await userService.deleteUser(req.currentUserId);
     res.status(200).json(result);
   } catch (e) {
     next(e);
