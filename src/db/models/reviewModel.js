@@ -10,6 +10,12 @@ export class ReviewModel {
     return review;
   }
 
+  async findById(reviewID) {
+    //리뷰아이디로 리뷰 찾기(리뷰조회모달이 만약 있을시 사용)
+    const review = await Review.findOne({ reviewID });
+    return review;
+  }
+
   async findByRoomId(roomID, perPage, page) {
     const total = await Review.countDocuments({ roomID });
     const reviews = await Review.find({ roomID })
