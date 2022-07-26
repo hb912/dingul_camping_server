@@ -85,7 +85,6 @@ class UserService {
       const newPasswordHash = await bcrypt.hash(password, 10);
       update.password = newPasswordHash;
     }
-    console.log(update);
     // 업데이트 진행
     const updateUser = await this.userModel.update({
       userID,

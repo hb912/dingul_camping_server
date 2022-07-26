@@ -27,11 +27,9 @@ export class UserModel {
   }
 
   async findKakaoUser(userId) {
-    console.log(userId);
     const user = await User.findOne({
       where: { email: userId, provider: 'kakao' },
     });
-    console.log(user);
     return user;
   }
 

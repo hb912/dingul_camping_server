@@ -32,7 +32,6 @@ export class ReviewModel {
 
   async update({ reviewID, ...update }) {
     //리뷰 수정(아마도 비밀번호 변경 혹은 주소 변경)
-    console.log(reviewID, update);
     const filter = { _id: reviewID };
     const option = { returnOriginal: false };
 
