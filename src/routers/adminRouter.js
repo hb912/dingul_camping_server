@@ -1,8 +1,5 @@
 import { Router } from 'express';
 import { userService, bookingService } from '../services';
-import { passport } from 'passport';
-import { loginRequired } from '../middleware/loginRequired';
-import { adminRequired } from '../middleware/adminRequired';
 
 const adminRouter = Router();
 

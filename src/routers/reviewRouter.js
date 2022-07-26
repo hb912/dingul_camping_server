@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { loginRequired } from '../middleware';
+import { refresh } from '../middleware';
 import { reviewService } from '../services';
 
 const reviewRouter = Router();
@@ -26,7 +26,7 @@ reviewRouter.get('/booking', async (req, res, next) => {
   }
 });
 
-reviewRouter.post('/create', loginRequired, async (req, res, next) => {
+reviewRouter.post('/create', refresh, async (req, res, next) => {
   const { roomID, bookingID, content, title, grade, name } = req.body;
   const userID = req.currentUserId;
   try {
@@ -45,7 +45,7 @@ reviewRouter.post('/create', loginRequired, async (req, res, next) => {
   }
 });
 
-reviewRouter.patch('/', async (req, res, next) => {
+reviewRouter.patch('/:reviewID', refresh, async (req, res, next) => {
   try {
     const { reviewID } = req.params;
     if (!reviewID) {
@@ -65,7 +65,7 @@ reviewRouter.patch('/', async (req, res, next) => {
   }
 });
 
-reviewRouter.delete('/:reviewID', async (req, res, next) => {
+reviewRouter.delete('/:reviewID', refresh, async (req, res, next) => {
   try {
     const { reviewID } = req.params;
     const result = await reviewService.delete(reviewID);
