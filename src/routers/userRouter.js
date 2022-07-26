@@ -66,7 +66,6 @@ userRouter.get(
     failureRedirect: '/',
   }),
   async (req, res) => {
-    console.log(`req:${req.user}`);
     if (!req.user) {
       return res.status(400).json('error');
     }
@@ -121,7 +120,6 @@ userRouter.post('/newPassword', async (req, res, next) => {
   try {
     const userEmail = await userService.getUserByEmail(email);
     const saveKey = await redisClient.setEx(number, 180, userEmail);
-    console.log(saveKey);
     if (!saveKey) {
       throw new Error('redis 저장에 실패했습니다.');
     }

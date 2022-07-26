@@ -28,7 +28,6 @@ reviewRouter.get('/booking', async (req, res, next) => {
 
 reviewRouter.post('/create', loginRequired, async (req, res, next) => {
   const { roomID, bookingID, content, title, grade, name } = req.body;
-  console.log(bookingID);
   const userID = req.currentUserId;
   try {
     const newReview = await reviewService.addReview({

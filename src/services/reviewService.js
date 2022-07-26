@@ -40,7 +40,6 @@ class ReviewService {
   }
 
   async changeReview(reviewInfo) {
-    console.log(reviewInfo);
     const review = await this.reviewModel.findById(reviewInfo.reviewID);
     if (!review) {
       throw new Error('해당 예약 내역이 없습니다.');

@@ -50,7 +50,6 @@ class BookingService {
       const filteredDates = processDate.filter((date) =>
         stringDates.includes(new Date(date).toDateString())
       );
-      console.log(filteredDates);
       if (filteredDates.length >= 1) {
         throw new Error('같은 날짜에 예약이 존재합니다.');
       }
@@ -112,7 +111,6 @@ class BookingService {
       const filteredDates = processDate.filter((date) =>
         stringDates.includes(new Date(date).toDateString())
       );
-      console.log(filteredDates);
       if (filteredDates.length >= 1) {
         throw new Error('같은 날짜에 이미 예약이 존재합니다.');
       }
