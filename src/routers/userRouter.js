@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { userService } from '../services';
 import { userService, mailer } from '../services';
 import passport from 'passport';
 import { loginRequired } from '../middleware/loginRequired';
@@ -52,7 +51,8 @@ userRouter.post('/login', async function (req, res) {
 userRouter.get(
   '/kakao',
   passport.authenticate('kakao', {
-    failureRedirect: '/', // 실패했을 경우 리다이렉트 경로
+    failureRedirect: '/',
+    session: false, // 실패했을 경우 리다이렉트 경로
   })
 );
 
@@ -61,13 +61,25 @@ userRouter.get(
   '/oauth',
   passport.authenticate('kakao', {
     failureRedirect: '/',
+    session: false,
   }),
   async (req, res) => {
     if (!req.user) {
       return res.status(400).json('error');
     }
-    const token = await userService.getUserToken(req.user);
-    res.status(200).json({ message: 'OK', token });
+    const { accessToken, refreshToken } = await userService.getUserToken(
+      req.user
+    );
+    const result = await userService.setRefreshToken(
+      refreshToken,
+      req.user._id
+    );
+    const role = req.user.role;
+    res.cookie('accessToken', accessToken, { maxAge: 90000 });
+    res.cookie('userRole', role);
+    res.cookie('refreshToken', refreshToken, { maxAge: 90000 });
+    // res.status(200).send({ message: 'success' });
+    res.redirect(`http://localhost:3000/`);
   }
 );
 
