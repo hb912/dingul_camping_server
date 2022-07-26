@@ -98,7 +98,7 @@ export class BookingModel {
 
   async findAllExceptRequests() {
     const bookings = await Booking.find({
-      status: { $in: ['예약 취소 요청'] },
+      status: { $in: ['예약 완료', '예약 취소', '취소 요청'] },
     })
       .sort({ startDate: 1 })
       .populate('roomID');
