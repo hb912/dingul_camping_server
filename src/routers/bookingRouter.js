@@ -4,6 +4,13 @@ import { refresh } from '../middleware';
 
 const bookingRouter = Router();
 
+const STATUS = {
+  CANCEL: '예약 취소',
+  CANCEL_REQUEST: '예약 취소 요청',
+  REQUEST: '예약 요청',
+  ACCEPT_REQUEST: '예약 승인',
+};
+
 bookingRouter.post('/create', refresh, async (req, res, next) => {
   const {
     startDate,
@@ -96,8 +103,11 @@ bookingRouter.get('/byRoom', async (req, res, next) => {
 bookingRouter.patch('/cancel', refresh, async (req, res, next) => {
   const { bookingID } = req.body;
   try {
-    const result = await bookingService.changeStatus(bookingID, '취소 요청');
-    if (result.status !== '취소 요청')
+    const result = await bookingService.changeStatus(
+      bookingID,
+      STATUS.CANCEL_STATUS
+    );
+    if (result.status !== STATUS.CANCEL_STATUS)
       throw new Error('업데이트에 실패했습니다.');
     res.status(200).json(result);
   } catch (e) {

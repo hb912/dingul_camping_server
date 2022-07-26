@@ -5,14 +5,23 @@ const Booking = model('booking', BookingSchema);
 
 export class BookingModel {
   async findByUserId(userID, perPage, page) {
+    let date = new Date();
+    date.setDate(date.getDate() - 1);
     const total = await Booking.countDocuments({ userID });
     const bookingInfos = await Booking.find({ userID })
       .sort({ startDate: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)
       .populate('roomID');
+    const checkPassed = bookingInfos.map((data) => {
+      if (data.endDate <= date) {
+        return { isPassed: true, bookingID: data._id };
+      } else {
+        return { isPassed: false, bookingID: data._id };
+      }
+    });
     const totalPage = Math.ceil(total / perPage);
-    return { bookingInfos, totalPage, page };
+    return { checkPassed, bookingInfos, totalPage, page };
   }
 
   //booking ID와 일치하는 BookingInfo 찾기
@@ -89,7 +98,7 @@ export class BookingModel {
 
   async findAllExceptRequests() {
     const bookings = await Booking.find({
-      status: { $in: ['예약 완료', '예약 취소', '예약 취소 요청'] },
+      status: { $in: ['예약 취소 요청'] },
     })
       .sort({ startDate: 1 })
       .populate('roomID');

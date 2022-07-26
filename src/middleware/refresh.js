@@ -2,14 +2,13 @@ import jwt from 'jsonwebtoken';
 import { userService } from '../services';
 
 async function refresh(req, res, next) {
-  const { refreshToken, accessToken } = req.cookies;
+  const { refreshToken, accessToken, userRole } = req.cookies;
   const secretKey = process.env.JWT_SECRET_KEY || 'secret-key';
   //액세스 토큰이 있고 verify에 성공했을때
   if (accessToken) {
     try {
       const jwtDecoded = jwt.verify(accessToken, secretKey);
       const userId = jwtDecoded.userID;
-      const userRole = jwtDecoded.role;
       req.currentUserId = userId;
       req.currentUserRole = userRole;
       next();
@@ -38,7 +37,7 @@ async function refresh(req, res, next) {
       user._id
     );
     req.currentUserId = user._id;
-    req.currentUserRole = user.role;
+    req.currentUserRole = userRole;
     res.cookie('accessToken', newTokens.accessToken, {
       maxAge: 90000,
       httpOnly: true,

@@ -11,7 +11,7 @@ import {
 import passport from 'passport';
 import passportConfig from './passport';
 // import MongoStore from 'connect-mongo';
-import { errorHandler } from './middleware';
+import { errorHandler, refresh, adminRequired } from './middleware';
 import cookieParser from 'cookie-parser';
 
 const app = express();
@@ -27,7 +27,7 @@ app.use(passport.initialize());
 app.use('/api', userRouter);
 app.use('/api/room', roomRouter);
 app.use('/api/booking', bookingRouter);
-app.use('/api/admin', adminRouter);
+app.use('/api/admin', refresh, adminRequired, adminRouter);
 app.use('/api/review', reviewRouter);
 app.use(errorHandler);
 

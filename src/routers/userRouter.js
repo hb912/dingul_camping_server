@@ -33,7 +33,7 @@ userRouter.post('/register', async (req, res, next) => {
   }
 });
 
-userRouter.post('/login', async function (req, res) {
+userRouter.post('/login', async function (req, res, next) {
   try {
     const { email, password } = req.body;
     const { accessToken, role, refreshToken } =
@@ -43,7 +43,7 @@ userRouter.post('/login', async function (req, res) {
     res.cookie('refreshToken', refreshToken, { maxAge: 90000 });
     res.status(200).send({ message: 'success' });
   } catch (err) {
-    res.status(400).send({ message: err + ' : login failed' });
+    next(err);
   }
 });
 

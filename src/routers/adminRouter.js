@@ -38,8 +38,7 @@ adminRouter.get('/book', async (req, res, next) => {
 adminRouter.get('/books', async (req, res, next) => {
   try {
     const { request } = req.query;
-
-    if (request == true) {
+    if (request === 'true') {
       const bookRequestLists = await bookingService.getBookRequests();
       res.status(200).json(bookRequestLists);
     } else {
@@ -65,9 +64,19 @@ adminRouter.delete('/user', async (req, res, next) => {
 // 예약 처리
 adminRouter.patch('/book', async (req, res, next) => {
   try {
-    const { bookingID, status } = req.body.data;
+    const { bookingID, status } = req.body;
     const changeStatus = await bookingService.changeStatus(bookingID, status);
     res.status(200).json(changeStatus);
+  } catch (e) {
+    next(e);
+  }
+});
+
+adminRouter.delete('/book/:bookingID', async (req, res, next) => {
+  try {
+    const { bookingID } = req.params;
+    const result = await bookingService.delete(bookingID);
+    res.status(200).json(result);
   } catch (e) {
     next(e);
   }
