@@ -26,6 +26,11 @@ export class UserModel {
     return user;
   }
 
+  async findByToken(refreshToken) {
+    const user = await User.findOne({ refreshToken });
+    return user;
+  }
+
   async findKakaoUser(userId) {
     const user = await User.findOne({
       where: { email: userId, provider: 'kakao' },

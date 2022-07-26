@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { userService, mailer } from '../services';
 import passport from 'passport';
-import { loginRequired } from '../middleware/loginRequired';
+import { refresh } from '../middleware';
 import bcrypt from 'bcrypt';
 import * as redis from 'redis';
 
@@ -33,28 +33,26 @@ userRouter.post('/register', async (req, res, next) => {
   }
 });
 
-userRouter.post('/login', async (req, res, next) => {
-  passport.authenticate('local', { session: false }, (err, user, info) => {
-    console.log(info);
-    if (err || !user) {
-      return res.status(400).json(err.message);
-    }
-
-    req.login(user, { session: false }, async (err) => {
-      if (err) {
-        return res.status(400).json({ message: err });
-      }
-      const token = await userService.getUserToken(user);
-      res.status(200).json({ message: 'OK', token });
-    });
-  })(req, res, next);
+userRouter.post('/login', async function (req, res) {
+  try {
+    const { email, password } = req.body;
+    const { accessToken, role, refreshToken } =
+      await userService.verifyPassword(email, password);
+    res.cookie('accessToken', accessToken, { maxAge: 90000 });
+    res.cookie('userRole', role);
+    res.cookie('refreshToken', refreshToken, { maxAge: 90000 });
+    res.status(200).send({ message: 'success' });
+  } catch (err) {
+    res.status(400).send({ message: err + ' : login failed' });
+  }
 });
 
 //처음 프론트가 보내줄 get 경로
 userRouter.get(
   '/kakao',
   passport.authenticate('kakao', {
-    failureRedirect: '/', // 실패했을 경우 리다이렉트 경로
+    failureRedirect: '/',
+    session: false, // 실패했을 경우 리다이렉트 경로
   })
 );
 
@@ -63,18 +61,30 @@ userRouter.get(
   '/oauth',
   passport.authenticate('kakao', {
     failureRedirect: '/',
+    session: false,
   }),
   async (req, res) => {
     if (!req.user) {
       return res.status(400).json('error');
     }
-    const token = await userService.getUserToken(req.user);
-    res.status(200).json({ message: 'OK', token });
+    const { accessToken, refreshToken } = await userService.getUserToken(
+      req.user
+    );
+    const result = await userService.setRefreshToken(
+      refreshToken,
+      req.user._id
+    );
+    const role = req.user.role;
+    res.cookie('accessToken', accessToken, { maxAge: 90000 });
+    res.cookie('userRole', role);
+    res.cookie('refreshToken', refreshToken, { maxAge: 90000 });
+    // res.status(200).send({ message: 'success' });
+    res.redirect(`http://localhost:3000/`);
   }
 );
 
 //패스워드 확인
-userRouter.get('/confirmPW', loginRequired, async (req, res, next) => {
+userRouter.get('/confirmPW', refresh, async (req, res, next) => {
   const { password } = req.query;
   try {
     const user = await userService.getUser(req.currentUserId);
@@ -94,7 +104,7 @@ userRouter.get('/confirmPW', loginRequired, async (req, res, next) => {
   }
 });
 
-userRouter.get('/user', loginRequired, async (req, res, next) => {
+userRouter.get('/user', refresh, async (req, res, next) => {
   if (!req.currentUserId) {
     res.status(400).json('유저정보를 찾을 수 없습니다.');
   }
@@ -106,14 +116,13 @@ userRouter.get('/user', loginRequired, async (req, res, next) => {
   }
 });
 
-userRouter.get('/logout', loginRequired, async (req, res) => {
-  req.logout();
-  req.session.save(function () {
-    res.status(200).json({ message: 'Ok' });
-  });
+userRouter.get('/logout', refresh, async (req, res) => {
+  res.clearCookie('accessToken');
+  res.clearCookie('refreshToken');
+  res.clearCookie('userRole');
+  res.status(200).json({ message: 'Ok' });
 });
 
-  const { email } = req.body;
 userRouter.post('/newPassword', async (req, res, next) => {
   const { email, name } = req.body;
   const number = Math.random().toString(18).slice(2);
@@ -133,7 +142,6 @@ userRouter.post('/newPassword', async (req, res, next) => {
   }
 });
 
-userRouter.get('/findPW/:redisKey', async (req, res, next) => {
 userRouter.get('/newPassword/:redisKey', async (req, res, next) => {
   const { redisKey } = req.params;
   try {
@@ -207,7 +215,7 @@ userRouter.patch('/user', refresh, async (req, res, next) => {
   }
 });
 
-userRouter.delete('/user', loginRequired, async (req, res, next) => {
+userRouter.delete('/user', refresh, async (req, res, next) => {
   if (!req.currentUserId) {
     res
       .status(400)
