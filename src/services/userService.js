@@ -35,10 +35,10 @@ class UserService {
 
     // 2개 프로퍼티를 jwt 토큰에 담음
     const accessToken = jwt.sign({ userID: user._id }, secretKey, {
-      expiresIn: '30s',
+      expiresIn: '1h',
     });
     const refreshToken = jwt.sign({}, secretKey, {
-      expiresIn: '60s',
+      expiresIn: '14d',
     });
     return { accessToken, refreshToken };
   }

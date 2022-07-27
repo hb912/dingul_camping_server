@@ -21,7 +21,8 @@ export class ReviewModel {
     const reviews = await Review.find({ roomID })
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
-      .limit(perPage);
+      .limit(perPage)
+      .populate('userID');
     const totalPage = Math.ceil(total / perPage);
     return { reviews, totalPage, page };
   }

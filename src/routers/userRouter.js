@@ -38,9 +38,17 @@ userRouter.post('/login', async function (req, res, next) {
     const { email, password } = req.body;
     const { accessToken, role, refreshToken } =
       await userService.verifyPassword(email, password);
-    res.cookie('accessToken', accessToken, { maxAge: 90000 });
-    res.cookie('userRole', role);
-    res.cookie('refreshToken', refreshToken, { maxAge: 90000 });
+    res.cookie('accessToken', accessToken, {
+      maxAge: 1000 * 60 * 60,
+      httpOnly: true,
+    });
+    res.cookie('userRole', role, {
+      maxAge: 1000 * 60 * 60 * 24 * 14,
+    });
+    res.cookie('refreshToken', refreshToken, {
+      maxAge: 1000 * 60 * 60 * 24 * 14,
+      httpOnly: true,
+    });
     res.status(200).send({ message: 'success' });
   } catch (err) {
     next(err);
@@ -70,17 +78,18 @@ userRouter.get(
     const { accessToken, refreshToken } = await userService.getUserToken(
       req.user
     );
-    const result = await userService.setRefreshToken(
-      refreshToken,
-      req.user._id
-    );
+    await userService.setRefreshToken(refreshToken, req.user._id);
     const role = req.user.role;
     res.cookie('accessToken', accessToken, {
-      maxAge: 90000,
+      maxAge: 1000 * 60 * 60,
+      httpOnly: true,
     });
-    res.cookie('userRole', role);
+    res.cookie('userRole', role, {
+      maxAge: 1000 * 60 * 60 * 24 * 14,
+    });
     res.cookie('refreshToken', refreshToken, {
-      maxAge: 90000,
+      maxAge: 1000 * 60 * 60 * 24 * 14,
+      httpOnly: true,
     });
     // res.status(200).send({ message: 'success' });
     res.redirect(`http://kdt-sw2-busan-team03.elicecoding.com:5001/`);
@@ -229,6 +238,9 @@ userRouter.delete('/user', refresh, async (req, res, next) => {
   }
   try {
     const result = await userService.deleteUser(req.currentUserId);
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
+    res.clearCookie('userRole');
     res.status(200).json(result);
   } catch (e) {
     next(e);
