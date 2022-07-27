@@ -38,9 +38,17 @@ userRouter.post('/login', async function (req, res, next) {
     const { email, password } = req.body;
     const { accessToken, role, refreshToken } =
       await userService.verifyPassword(email, password);
-    res.cookie('accessToken', accessToken, { maxAge: 90000 });
-    res.cookie('userRole', role);
-    res.cookie('refreshToken', refreshToken, { maxAge: 90000 });
+    res.cookie('accessToken', accessToken, {
+      maxAge: 1000 * 60 * 60,
+      httpOnly: true,
+    });
+    res.cookie('userRole', role, {
+      maxAge: 1000 * 60 * 60 * 24 * 14,
+    });
+    res.cookie('refreshToken', refreshToken, {
+      maxAge: 1000 * 60 * 60 * 24 * 14,
+      httpOnly: true,
+    });
     res.status(200).send({ message: 'success' });
   } catch (err) {
     next(err);
@@ -76,14 +84,18 @@ userRouter.get(
     );
     const role = req.user.role;
     res.cookie('accessToken', accessToken, {
-      maxAge: 90000,
+      maxAge: 1000 * 60 * 60,
+      httpOnly: true,
     });
-    res.cookie('userRole', role);
+    res.cookie('userRole', role, {
+      maxAge: 1000 * 60 * 60 * 24 * 14,
+    });
     res.cookie('refreshToken', refreshToken, {
-      maxAge: 90000,
+      maxAge: 1000 * 60 * 60 * 24 * 14,
+      httpOnly: true,
     });
     // res.status(200).send({ message: 'success' });
-    res.redirect(`http://kdt-sw2-busan-team03.elicecoding.com:3000/`);
+    res.redirect(`http://kdt-sw2-busan-team03.elicecoding.com:5001/`);
   }
 );
 
@@ -154,7 +166,7 @@ userRouter.get('/newPassword/:redisKey', async (req, res, next) => {
       throw new Error('유효기간이 지났거나 잘못된 링크입니다.');
     }
     res.redirect(
-      `http://kdt-sw2-busan-team03.elicecoding.com:3000/changePassword/${userEmail}`
+      `http://kdt-sw2-busan-team03.elicecoding.com:5001/changePassword/${userEmail}/${redisKey}`
     );
   } catch (e) {
     next(e);

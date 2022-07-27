@@ -42,12 +42,14 @@ async function refresh(req, res, next) {
     req.currentUserId = user._id;
     req.currentUserRole = userRole;
     res.cookie('accessToken', newTokens.accessToken, {
-      maxAge: 90000,
+      maxAge: 1000 * 60 * 60,
       httpOnly: true,
     });
-    res.cookie('userRole', user.role);
+    res.cookie('userRole', user.role, {
+      maxAge: 1000 * 60 * 60 * 24 * 14,
+    });
     res.cookie('refreshToken', newTokens.refreshToken, {
-      maxAge: 90000,
+      maxAge: 1000 * 60 * 60 * 24 * 14,
       httpOnly: true,
     });
     next();
