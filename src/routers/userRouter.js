@@ -77,16 +77,13 @@ userRouter.get(
     const role = req.user.role;
     res.cookie('accessToken', accessToken, {
       maxAge: 90000,
-      sameSite: 'none',
-      secure: true,
     });
     res.cookie('userRole', role);
     res.cookie('refreshToken', refreshToken, {
       maxAge: 90000,
-      domain: 'http://localhost:3000/',
     });
     // res.status(200).send({ message: 'success' });
-    res.redirect(`http://localhost:3000/`);
+    res.redirect(`http://kdt-sw2-busan-team03.elicecoding.com:3000/`);
   }
 );
 
@@ -152,11 +149,13 @@ userRouter.post('/newPassword', async (req, res, next) => {
 userRouter.get('/newPassword/:redisKey', async (req, res, next) => {
   const { redisKey } = req.params;
   try {
-    const userID = await redisClient.get(redisKey);
-    if (!userID) {
+    const userEmail = await redisClient.get(redisKey);
+    if (!userEmail) {
       throw new Error('유효기간이 지났거나 잘못된 링크입니다.');
     }
-    res.status(200).json(userID);
+    res.redirect(
+      `http://kdt-sw2-busan-team03.elicecoding.com:3000/changePassword/${userEmail}`
+    );
   } catch (e) {
     next(e);
   }

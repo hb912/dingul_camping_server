@@ -4,7 +4,7 @@ import { userModel } from '../../db';
 const config = {
   clientID: process.env.KAKAO_CLIENT_ID,
   clientSecret: '', // clientSecret을 사용하지 않는다면 넘기지 말거나 빈 스트링을 넘길 것
-  callbackURL: 'http://localhost:5000/api/oauth',
+  callbackURL: 'http://kdt-sw2-busan-team03.elicecoding.com:5000/api/oauth',
 };
 
 const kakao = new KakaoStrategy(
