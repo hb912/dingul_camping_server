@@ -83,7 +83,7 @@ userRouter.get(
       maxAge: 90000,
     });
     // res.status(200).send({ message: 'success' });
-    res.redirect(`http://kdt-sw2-busan-team03.elicecoding.com:3000/`);
+    res.redirect(`http://kdt-sw2-busan-team03.elicecoding.com:5001/`);
   }
 );
 
@@ -154,7 +154,7 @@ userRouter.get('/newPassword/:redisKey', async (req, res, next) => {
       throw new Error('유효기간이 지났거나 잘못된 링크입니다.');
     }
     res.redirect(
-      `http://kdt-sw2-busan-team03.elicecoding.com:3000/changePassword/${userEmail}`
+      `http://kdt-sw2-busan-team03.elicecoding.com:5001/changePassword/${userEmail}/${redisKey}`
     );
   } catch (e) {
     next(e);
