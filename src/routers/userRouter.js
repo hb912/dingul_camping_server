@@ -78,10 +78,7 @@ userRouter.get(
     const { accessToken, refreshToken } = await userService.getUserToken(
       req.user
     );
-    const result = await userService.setRefreshToken(
-      refreshToken,
-      req.user._id
-    );
+    await userService.setRefreshToken(refreshToken, req.user._id);
     const role = req.user.role;
     res.cookie('accessToken', accessToken, {
       maxAge: 1000 * 60 * 60,
@@ -241,6 +238,9 @@ userRouter.delete('/user', refresh, async (req, res, next) => {
   }
   try {
     const result = await userService.deleteUser(req.currentUserId);
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
+    res.clearCookie('userRole');
     res.status(200).json(result);
   } catch (e) {
     next(e);
