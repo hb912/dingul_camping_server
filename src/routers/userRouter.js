@@ -185,7 +185,7 @@ userRouter.get('/newPassword/:redisKey', async (req, res, next) => {
   try {
     const userEmail = await redisClient.get(redisKey);
     if (!userEmail) {
-      throw new Error('유효기간이 지났거나 잘못된 링크입니다.');
+      res.redirect(`http://kdt-sw2-busan-team03.elicecoding.com:5001/notFound`);
     }
     res.redirect(
       `http://kdt-sw2-busan-team03.elicecoding.com:5001/changePassword/${redisKey}`
