@@ -11,9 +11,7 @@ const kakao = new KakaoStrategy(
   config,
   async (accessToken, refreshToken, profile, done) => {
     try {
-      console.log(profile);
       const user = await userModel.findKakaoUser(profile.id);
-      console.log(`kakao:${user}`);
       if (user) {
         done(null, { user, accessToken });
       } else {
