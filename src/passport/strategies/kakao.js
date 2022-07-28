@@ -11,16 +11,18 @@ const kakao = new KakaoStrategy(
   config,
   async (accessToken, refreshToken, profile, done) => {
     try {
+      console.log(profile);
       const user = await userModel.findKakaoUser(profile.id);
+      console.log(`kakao:${user}`);
       if (user) {
-        done(null, user);
+        done(null, { user, accessToken });
       } else {
         const newUser = await userModel.create({
           email: profile.id,
           name: profile.displayName,
           provider: 'kakao',
         });
-        done(null, newUser);
+        done(null, { newUser, accessToken });
       }
     } catch (error) {
       done(error);

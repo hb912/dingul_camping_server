@@ -100,10 +100,11 @@ userRouter.get(
     if (!req.user) {
       return res.status(400).json('error');
     }
+    console.log(req.user);
     const { accessToken, refreshToken } = await userService.getUserToken(
-      req.user
+      req.user.user
     );
-    await userService.setRefreshToken(refreshToken, req.user._id);
+    await userService.setRefreshToken(refreshToken, req.user.user._id);
     const role = req.user.role;
     res.cookie('accessToken', accessToken, {
       maxAge: 1000 * 60 * 60,

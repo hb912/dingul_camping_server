@@ -33,7 +33,8 @@ export class UserModel {
 
   async findKakaoUser(userId) {
     const user = await User.findOne({
-      where: { email: userId, provider: 'kakao' },
+      email: userId,
+      provider: 'kakao',
     });
     return user;
   }
