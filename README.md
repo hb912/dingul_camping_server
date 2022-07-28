@@ -25,14 +25,13 @@
 - <font size="4">주제 : 캠핑 예약 사이트</font>
 - <font size="3">메인 기능</font>
   <details>
-  <summary> 1.  예약 기능</summary>
-  
+  <summary> 1.  예약 기능</summary>  
       <ul>
           <li>예약 하기</li>
           <li>예약 취소</li>
           <li>예약 확인</li>
       </ul>
-    </details>
+  </details>
   <details>
   <summary> 2. 회원 기능</summary>
       <ul>
@@ -45,26 +44,24 @@
           <li>예약 취소</li>
           <li>계정 찾기</li>
       </ul>
-    </details>
+  </details>
   <details>
-  <summary> 3.  관리자 기능</summary>
-  
+  <summary> 3.  관리자 기능</summary>  
       <ul>
           <li>회원 관리</li>
           <li>예약 승인</li>
           <li>예약 취소</li>
       </ul>
-    </details>
+  </details>
   <details>
-  <summary> 4.  리뷰 기능</summary>
-  
+  <summary> 4.  리뷰 기능</summary>  
       <ul>
           <li>리뷰 조회</li>
           <li>리뷰 작성</li>
           <li>리뷰 수정</li>
           <li>리뷰 삭제</li>
       </ul>
-    </details>
+  </details>
   
 
 <br />
