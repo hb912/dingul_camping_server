@@ -34,21 +34,46 @@ userRouter.post('/register', async (req, res, next) => {
 });
 
 userRouter.post('/login', async function (req, res, next) {
+  const { email, password, autoLogin } = req.body;
   try {
-    const { email, password } = req.body;
+    if (!email) {
+      throw new Error('이메일을 입력해 주세요');
+    }
+    if (!password) {
+      throw new Error('비밀번호를 입력해 주세요');
+    }
+    if (!autoLogin) {
+      throw new Error('set autologin failed');
+    }
     const { accessToken, role, refreshToken } =
       await userService.verifyPassword(email, password);
-    res.cookie('accessToken', accessToken, {
-      maxAge: 1000 * 60 * 60,
-      httpOnly: true,
-    });
-    res.cookie('userRole', role, {
-      maxAge: 1000 * 60 * 60 * 24 * 14,
-    });
-    res.cookie('refreshToken', refreshToken, {
-      maxAge: 1000 * 60 * 60 * 24 * 14,
-      httpOnly: true,
-    });
+    if (autoLogin === 'true') {
+      res.clearCookie('accessToken');
+      res.clearCookie('refreshToken');
+      res.clearCookie('userRole');
+      res.cookie('accessToken', accessToken, {
+        maxAge: 1000 * 60 * 60,
+        httpOnly: true,
+      });
+      res.cookie('userRole', role, {
+        maxAge: 1000 * 60 * 60 * 24 * 14,
+      });
+      res.cookie('refreshToken', refreshToken, {
+        maxAge: 1000 * 60 * 60 * 24 * 14,
+        httpOnly: true,
+      });
+    } else {
+      res.clearCookie('accessToken');
+      res.clearCookie('refreshToken');
+      res.clearCookie('userRole');
+      res.cookie('accessToken', accessToken, {
+        maxAge: 1000 * 60 * 60 * 24,
+        httpOnly: true,
+      });
+      res.cookie('userRole', role, {
+        maxAge: 1000 * 60 * 60 * 24,
+      });
+    }
     res.status(200).send({ message: 'success' });
   } catch (err) {
     next(err);
@@ -144,7 +169,7 @@ userRouter.post('/newPassword', async (req, res, next) => {
     if (name !== user.name) {
       throw new Error('이름이 일치하지 않습니다.');
     }
-    const saveKey = await redisClient.setEx(number, 180, user.email);
+    const saveKey = await redisClient.setEx(number, 60 * 60 * 48, user.email);
     if (!saveKey) {
       throw new Error('redis 저장에 실패했습니다.');
     }
@@ -160,10 +185,10 @@ userRouter.get('/newPassword/:redisKey', async (req, res, next) => {
   try {
     const userEmail = await redisClient.get(redisKey);
     if (!userEmail) {
-      throw new Error('유효기간이 지났거나 잘못된 링크입니다.');
+      res.redirect(`http://kdt-sw2-busan-team03.elicecoding.com:5001/notFound`);
     }
     res.redirect(
-      `http://kdt-sw2-busan-team03.elicecoding.com:5001/changePassword/${userEmail}/${redisKey}`
+      `http://kdt-sw2-busan-team03.elicecoding.com:5001/changePassword/${redisKey}`
     );
   } catch (e) {
     next(e);
@@ -171,16 +196,14 @@ userRouter.get('/newPassword/:redisKey', async (req, res, next) => {
 });
 
 userRouter.get('/findEmail', async (req, res, next) => {
-  const { name } = req.query;
+  const { name, phoneNumber } = req.query;
   if (!name) {
     res.status(400).json({ result: 'error', reason: '이름을 입력해 주세요.' });
   }
   try {
-    const user = await userService.getUserByName(name);
+    const user = await userService.findUserEmail(name, phoneNumber);
     if (!user) {
-      res
-        .status(400)
-        .json({ result: 'error', reason: '유저정보를 찾을 수 없습니다.' });
+      throw new Error('유저 정보를 찾을 수 없습니다.');
     }
     const { email } = user;
     res.status(200).json(email);
@@ -191,8 +214,8 @@ userRouter.get('/findEmail', async (req, res, next) => {
 
 userRouter.patch('/password', async (req, res, next) => {
   try {
-    const { password, email, redisKey } = req.body;
-    await redisClient.del(redisKey);
+    const { password, redisKey } = req.body;
+    const email = await redisClient.getDel(redisKey);
     const user = await userService.getUserByEmail(email);
     if (!user) {
       throw new Error('유저 정보를 찾을 수 없습니다');

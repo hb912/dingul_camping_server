@@ -25,7 +25,19 @@ bookingRouter.post('/create', refresh, async (req, res, next) => {
   } = req.body;
   const userID = req.currentUserId;
 
+  const date = new Date();
+  date.setDate(date.getDate() - 1);
   try {
+    if (endDate <= startDate)
+      throw new Error('종료날짜가 시작날짜보다 작거나 같습니다.');
+    if (new Date(startDate) < date)
+      throw new Error('과거의 예약은 진행할 수 없습니다.');
+    const result = await bookingService.getExistBooking(
+      startDate,
+      endDate,
+      roomID
+    );
+    console.log(result);
     const newBooking = await bookingService.addBooking({
       startDate,
       endDate,
@@ -63,6 +75,13 @@ bookingRouter.get('/confirm', refresh, async (req, res, next) => {
   const date = new Date();
   date.setDate(date.getDate() - 1);
   try {
+    if (!startDate || !endDate || !roomID) {
+      throw new Error(
+        '시작날짜 혹은 종료날짜 혹은 객실이 선택되지 않았습니다.'
+      );
+    }
+    if (endDate <= startDate)
+      throw new Error('종료날짜가 시작날짜보다 작거나 같습니다.');
     if (new Date(startDate) < date)
       throw new Error('과거의 예약은 진행할 수 없습니다.');
     const result = await bookingService.getExistBooking(

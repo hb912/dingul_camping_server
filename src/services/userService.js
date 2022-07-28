@@ -74,7 +74,7 @@ class UserService {
       );
     }
     const { accessToken, refreshToken } = await this.getUserToken(user);
-    const result = await this.setRefreshToken(refreshToken, user._id);
+    await this.setRefreshToken(refreshToken, user._id);
     const role = user.role;
     return { accessToken, refreshToken, role };
   }
@@ -90,8 +90,8 @@ class UserService {
     return users;
   }
 
-  async getUserByName(name) {
-    const user = await this.userModel.findByName(name);
+  async findUserEmail(name, phoneNumber) {
+    const user = await this.userModel.findByName(name, phoneNumber);
     return user;
   }
 
