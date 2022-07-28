@@ -15,12 +15,12 @@ const kakao = new KakaoStrategy(
       if (user) {
         done(null, { user, accessToken });
       } else {
-        const newUser = await userModel.create({
+        const user = await userModel.create({
           email: profile.id,
           name: profile.displayName,
           provider: 'kakao',
         });
-        done(null, { newUser, accessToken });
+        done(null, { user, accessToken });
       }
     } catch (error) {
       done(error);
