@@ -97,7 +97,7 @@ userRouter.get(
     session: false,
   }),
 
-  async (req, res, next) => {
+  async (req, res) => {
     try {
       if (!req.user) {
         res.status(400).json('카카오 로그인 에러');
@@ -121,7 +121,7 @@ userRouter.get(
       // res.status(200).send({ message: 'success' });
       res.redirect(`http://kdt-sw2-busan-team03.elicecoding.com:5001/`);
     } catch (error) {
-      next(error);
+      res.redirect(`http://kdt-sw2-busan-team03.elicecoding.com:5001/notFound`);
     }
   }
 );
