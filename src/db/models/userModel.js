@@ -10,8 +10,8 @@ export class UserModel {
     return user;
   }
 
-  async findByName(name) {
-    const user = await User.findOne({ name });
+  async findByName(name, phoneNumber) {
+    const user = await User.findOne({ name, phoneNumber });
     return user;
   }
 
