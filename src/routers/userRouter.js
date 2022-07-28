@@ -97,28 +97,32 @@ userRouter.get(
     session: false,
   }),
   async (req, res) => {
-    if (!req.user) {
-      return res.status(400).json('error');
+    try {
+      if (!req.user.user) {
+        throw new Error('카카오 로그인 에러');
+      }
+      console.log(req.user);
+      const { accessToken, refreshToken } = await userService.getUserToken(
+        req.user.user
+      );
+      await userService.setRefreshToken(refreshToken, req.user.user._id);
+      const role = req.user.user.role;
+      res.cookie('accessToken', accessToken, {
+        maxAge: 1000 * 60 * 60,
+        httpOnly: true,
+      });
+      res.cookie('userRole', role, {
+        maxAge: 1000 * 60 * 60 * 24 * 14,
+      });
+      res.cookie('refreshToken', refreshToken, {
+        maxAge: 1000 * 60 * 60 * 24 * 14,
+        httpOnly: true,
+      });
+      // res.status(200).send({ message: 'success' });
+      res.redirect(`http://kdt-sw2-busan-team03.elicecoding.com:5001/`);
+    } catch (e) {
+      res.redirect(`http://kdt-sw2-busan-team03.elicecoding.com:5001/notFound`);
     }
-    console.log(req.user);
-    const { accessToken, refreshToken } = await userService.getUserToken(
-      req.user.user
-    );
-    await userService.setRefreshToken(refreshToken, req.user.user._id);
-    const role = req.user.role;
-    res.cookie('accessToken', accessToken, {
-      maxAge: 1000 * 60 * 60,
-      httpOnly: true,
-    });
-    res.cookie('userRole', role, {
-      maxAge: 1000 * 60 * 60 * 24 * 14,
-    });
-    res.cookie('refreshToken', refreshToken, {
-      maxAge: 1000 * 60 * 60 * 24 * 14,
-      httpOnly: true,
-    });
-    // res.status(200).send({ message: 'success' });
-    res.redirect(`http://kdt-sw2-busan-team03.elicecoding.com:5001/`);
   }
 );
 
