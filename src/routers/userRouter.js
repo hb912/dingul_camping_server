@@ -42,12 +42,12 @@ userRouter.post('/login', async function (req, res, next) {
     if (!password) {
       throw new Error('비밀번호를 입력해 주세요');
     }
-    if (!autoLogin) {
+    if (typeof autoLogin === 'undefined') {
       throw new Error('set autologin failed');
     }
     const { accessToken, role, refreshToken } =
       await userService.verifyPassword(email, password);
-    if (autoLogin === 'true') {
+    if (autoLogin) {
       res.clearCookie('accessToken');
       res.clearCookie('refreshToken');
       res.clearCookie('userRole');
