@@ -10,18 +10,32 @@ export class UserModel {
     return user;
   }
 
+  async findByName(name, phoneNumber) {
+    const user = await User.findOne({ name, phoneNumber });
+    return user;
+  }
+
+  async findAllByName(name) {
+    const user = await User.find({ name });
+    return user;
+  }
+
   async findById(userId) {
     //특정 아이디를 가진 유저 찾기
     const user = await User.findOne({ _id: userId });
     return user;
   }
 
+  async findByToken(refreshToken) {
+    const user = await User.findOne({ refreshToken });
+    return user;
+  }
+
   async findKakaoUser(userId) {
-    console.log(userId);
     const user = await User.findOne({
-      where: { email: userId, provider: 'kakao' },
+      email: userId,
+      provider: 'kakao',
     });
-    console.log(user);
     return user;
   }
 
@@ -37,16 +51,22 @@ export class UserModel {
     return users;
   }
 
-  async update({ userId, update }) {
+  async findAllSorted() {
+    // 이름 순서대로 모든 유저 가져오기
+    const users = await User.find({}).sort({ name: 1 });
+    return users;
+  }
+
+  async update({ userID, update }) {
     //유저 정보 수정(아마도 비밀번호 변경 혹은 주소 변경)
-    const filter = { _id: userId };
+    const filter = { _id: userID };
     const option = { returnOriginal: false };
 
     const updatedUser = await User.findOneAndUpdate(filter, update, option);
     return updatedUser;
   }
 
-  async delete(userId) {
+  async deleteUser(userId) {
     const deleteUser = await User.deleteOne({ _id: userId });
     return deleteUser;
   }

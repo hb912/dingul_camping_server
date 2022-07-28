@@ -14,3 +14,6 @@ db.on('error', (error) =>
 );
 
 export * from './models/userModel';
+export * from './models/roomModel';
+export * from './models/bookingModel';
+export * from './models/reviewModel';

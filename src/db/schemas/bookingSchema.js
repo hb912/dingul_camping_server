@@ -2,7 +2,7 @@ import { Schema } from 'mongoose';
 
 const BookingSchema = new Schema(
   {
-    RoomID: {
+    roomID: {
       type: Schema.Types.ObjectID,
       required: true,
       ref: 'rooms',
@@ -12,9 +12,24 @@ const BookingSchema = new Schema(
       required: true,
       ref: 'users',
     },
+    name: {
+      type: String,
+    },
+    phoneNumber: {
+      type: String,
+    },
     price: {
       type: Number,
       required: true,
+    },
+    startDate: {
+      type: Date,
+    },
+    endDate: {
+      type: Date,
+    },
+    processDate: {
+      type: [Date],
     },
     peopleNumber: {
       type: Number,
@@ -23,13 +38,13 @@ const BookingSchema = new Schema(
     requirements: {
       type: String,
     },
-    state: {
+    status: {
       type: String,
-      required: true,
+      default: '예약 요청',
     },
     isReviewed: {
       type: Boolean,
-      required: true,
+      default: false,
     },
   },
   {
