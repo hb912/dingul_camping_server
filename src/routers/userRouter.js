@@ -119,9 +119,9 @@ userRouter.get(
         httpOnly: true,
       });
       // res.status(200).send({ message: 'success' });
-      res.redirect(`http://kdt-sw2-busan-team03.elicecoding.com:5001/`);
+      res.redirect(`http://kdt-sw2-busan-team03.elicecoding.com/`);
     } catch (error) {
-      res.redirect(`http://kdt-sw2-busan-team03.elicecoding.com:5001/notFound`);
+      res.redirect(`http://kdt-sw2-busan-team03.elicecoding.com/notFound`);
     }
   }
 );
@@ -190,10 +190,10 @@ userRouter.get('/newPassword/:redisKey', async (req, res, next) => {
   try {
     const userEmail = await redisClient.get(redisKey);
     if (!userEmail) {
-      res.redirect(`http://kdt-sw2-busan-team03.elicecoding.com:5001/notFound`);
+      res.redirect(`http://kdt-sw2-busan-team03.elicecoding.com/notFound`);
     }
     res.redirect(
-      `http://kdt-sw2-busan-team03.elicecoding.com:5001/changePassword/${redisKey}`
+      `http://kdt-sw2-busan-team03.elicecoding.com/changePassword/${redisKey}`
     );
   } catch (e) {
     next(e);
