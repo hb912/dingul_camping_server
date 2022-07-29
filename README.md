@@ -25,13 +25,14 @@
 - <font size="4">주제 : 캠핑 예약 사이트</font>
 - <font size="3">메인 기능</font>
   <details>
-  <summary> 1.  예약 기능</summary>  
+  <summary> 1.  예약 기능</summary>
+  
       <ul>
           <li>예약 하기</li>
           <li>예약 취소</li>
           <li>예약 확인</li>
       </ul>
-  </details>
+    </details>
   <details>
   <summary> 2. 회원 기능</summary>
       <ul>
@@ -44,24 +45,26 @@
           <li>예약 취소</li>
           <li>계정 찾기</li>
       </ul>
-  </details>
+    </details>
   <details>
-  <summary> 3.  관리자 기능</summary>  
+  <summary> 3.  관리자 기능</summary>
+  
       <ul>
           <li>회원 관리</li>
           <li>예약 승인</li>
           <li>예약 취소</li>
       </ul>
-  </details>
+    </details>
   <details>
-  <summary> 4.  리뷰 기능</summary>  
+  <summary> 4.  리뷰 기능</summary>
+  
       <ul>
           <li>리뷰 조회</li>
           <li>리뷰 작성</li>
           <li>리뷰 수정</li>
           <li>리뷰 삭제</li>
       </ul>
-  </details>
+    </details>
   
 
 <br />
@@ -89,6 +92,7 @@
 <img alt="styled--components" src ="https://img.shields.io/badge/styled -- components-DB7093.svg?&style=for-the-badge&logo=styled-components&logoColor=333333"/>&nbsp;
 <img alt="bootstrap" src ="https://img.shields.io/badge/react--bootstrap-7952B3.svg?&style=for-the-badge&logo=bootstrap&logoColor=ffffff"/>&nbsp;
 <img alt="MUI" src ="https://img.shields.io/badge/material--UI-007FFF.svg?&style=for-the-badge&logo=MUI&logoColor=ffffff"/>&nbsp;
+<img alt="antdesign" src ="https://img.shields.io/badge/Ant Design-0170FE.svg?&style=for-the-badge&logo=Ant Design&logoColor=ffffff"/>&nbsp;
 
 <br />
 
@@ -131,7 +135,31 @@
 
 
 ## 🎥 데모 영상
-<br /><br />
+<br />
+
+### 회원가입, 로그인, 로그아웃
+
+&nbsp;&nbsp;&nbsp;&nbsp;![ezgif.com-gif-maker](/uploads/90b1b2891ba31d02662aade66372dfa2/ezgif.com-gif-maker.gif)
+### 유저 이메일 찾기, 패스워드 찾기
+
+&nbsp;&nbsp;&nbsp;&nbsp;![ezgif.com-gif-maker__2_](/uploads/8e63b23c986f6706e65b8262d6a9f613/ezgif.com-gif-maker__2_.gif)
+### 객실 상세 보기
+
+&nbsp;&nbsp;&nbsp;&nbsp;![ezgif.com-gif-maker__3_](/uploads/46be4899c39fddc5716d988b3e836a84/ezgif.com-gif-maker__3_.gif)
+### 객실 예약 하기
+
+&nbsp;&nbsp;&nbsp;&nbsp;![ezgif.com-gif-maker__4_](/uploads/eb4cfa874c4539ff916e433f923d94cb/ezgif.com-gif-maker__4_.gif)
+### 유저 예약 조회
+
+&nbsp;&nbsp;&nbsp;&nbsp;![ezgif.com-gif-maker__5_](/uploads/7f836a5582247d50c23d9392516d9d5e/ezgif.com-gif-maker__5_.gif)
+### 유저 정보 조회
+
+&nbsp;&nbsp;&nbsp;&nbsp;![ezgif.com-gif-maker__6_](/uploads/5befc0f4dccbc14c0c0eedb2a16d4d7d/ezgif.com-gif-maker__6_.gif)
+### 관리자 페이지
+
+&nbsp;&nbsp;&nbsp;&nbsp;![ezgif.com-gif-maker__7_](/uploads/8cffefd4dd3fbe12cbce8c32c11eb9c7/ezgif.com-gif-maker__7_.gif)
+
+
 
 ## 👪 구성원 역할
 <br />
@@ -143,3 +171,4 @@
 |  최정훈   |  프론트엔드   | ReservationPage  |
 |  박우람   |  프론트엔드   | Main, Login  |
 |  김채홍   |  백엔드   |  Back  |
+
