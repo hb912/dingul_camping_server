@@ -126,7 +126,7 @@
 | [🔗API 문서](https://documenter.getpostman.com/view/21028820/UzR1K2iz)
 
 | 🔗서비스 구성도
-<br /><img src="/uploads/6de42a38466aa35deb7c801abf677c4f/image.png" alt="서비스 구성도" width="1000px" height="500px">
+<br /><img src="/uploads/b28a08240c4585ff564e6e2aa77c2cd7/C3D453E3-6D2C-4DCE-BE96-8B4C96A6A153.png" alt="서비스 구성도" width="1000px" height="500px">
 
 
 <br />
