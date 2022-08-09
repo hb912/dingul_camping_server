@@ -126,7 +126,7 @@
 | [🔗API 문서](https://documenter.getpostman.com/view/21028820/UzR1K2iz)
 
 | 🔗서비스 구성도
-<br /><img src="/uploads/b28a08240c4585ff564e6e2aa77c2cd7/C3D453E3-6D2C-4DCE-BE96-8B4C96A6A153.png" alt="서비스 구성도" width="1000px" height="500px">
+<br /><img src="https://i.imgur.com/Td8VjjS.png" alt="서비스 구성도" width="1000px" height="500px">
 
 
 <br />
@@ -137,26 +137,26 @@
 
 ### 회원가입, 로그인, 로그아웃
 
-&nbsp;&nbsp;&nbsp;&nbsp;![ezgif.com-gif-maker](/uploads/31c68682a13adb20a1209848dd7b96c6/ezgif.com-gif-maker.gif)
+&nbsp;&nbsp;&nbsp;&nbsp;![Imgur](https://imgur.com/cP7cGzm.gif)
 ### 유저 이메일 찾기, 패스워드 찾기
 
-&nbsp;&nbsp;&nbsp;&nbsp;![ezgif.com-gif-maker__2_](/uploads/917732e0eadb2a4fb27311bb16639a7f/ezgif.com-gif-maker__2_.gif)
+&nbsp;&nbsp;&nbsp;&nbsp;![Imgur](https://i.imgur.com/IQeNnFI.gif)
 ### 객실 상세 보기
 
-&nbsp;&nbsp;&nbsp;&nbsp;![ezgif.com-gif-maker__3_](/uploads/a53c17c9138f0589fb6144dcf710b8a8/ezgif.com-gif-maker__3_.gif)
-
+&nbsp;&nbsp;&nbsp;&nbsp;![Imgur](https://i.imgur.com/KllmzQF.gif)
 ### 객실 예약 하기
 
-&nbsp;&nbsp;&nbsp;&nbsp;![ezgif.com-gif-maker__4_](/uploads/e7100d458a391979900deb6cf1d7d4f3/ezgif.com-gif-maker__4_.gif)
+&nbsp;&nbsp;&nbsp;&nbsp;![Imgur](https://i.imgur.com/KimXChJ.gif)
 ### 유저 예약 조회
 
-&nbsp;&nbsp;&nbsp;&nbsp;![ezgif.com-gif-maker__5_](/uploads/a0f4ffc18865d7162148ec8f5bccdd3b/ezgif.com-gif-maker__5_.gif)
-### 유저 정보 조회
+&nbsp;&nbsp;&nbsp;&nbsp;![Imgur](https://i.imgur.com/qIcfAYr.gif)
+### 유저 정보 수정
 
-&nbsp;&nbsp;&nbsp;&nbsp;![ezgif.com-gif-maker__6_](/uploads/4dc65f3eb2113de47a87e10b66fdccbb/ezgif.com-gif-maker__6_.gif)
+&nbsp;&nbsp;&nbsp;&nbsp;![Imgur](https://i.imgur.com/BTpzQmR.gif)
 ### 관리자 페이지
 
-&nbsp;&nbsp;&nbsp;&nbsp;![ezgif.com-gif-maker__7_](/uploads/a036551bba810f704860c7e65afdb9f2/ezgif.com-gif-maker__7_.gif)
+&nbsp;&nbsp;&nbsp;&nbsp;![Imgur](https://i.imgur.com/GxqRAHs.gif)
+
 
 
 ## 👪 구성원 역할
