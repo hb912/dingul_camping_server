@@ -43,6 +43,17 @@ class UserService {
     return { accessToken, refreshToken };
   }
 
+  async getAccessToken(user) {
+    const secretKey = process.env.JWT_SECRET_KEY || 'secret-key';
+
+    // 2개 프로퍼티를 jwt 토큰에 담음
+    const accessToken = jwt.sign({ userID: user._id }, secretKey, {
+      expiresIn: '1d',
+    });
+
+    return accessToken;
+  }
+
   async getUserByRefreshToken(refreshToken) {
     const user = await this.userModel.findByToken(refreshToken);
     if (!user) {
@@ -52,7 +63,7 @@ class UserService {
   }
 
   // 로그인
-  async verifyPassword(email, password) {
+  async verifyPassword(email, password, autoLogin) {
     // 로그인 성공 -> JWT 웹 토큰 생성
     const user = await this.userModel.findByEmail(email);
     if (!user) {
@@ -73,10 +84,14 @@ class UserService {
         '비밀번호가 일치하지 않습니다. 다시 한 번 확인해 주세요.'
       );
     }
-    const { accessToken, refreshToken } = await this.getUserToken(user);
-    await this.setRefreshToken(refreshToken, user._id);
     const role = user.role;
-    return { accessToken, refreshToken, role };
+    if (autoLogin) {
+      const { accessToken, refreshToken } = await this.getUserToken(user);
+      await this.setRefreshToken(refreshToken, user._id);
+      return { accessToken, refreshToken, role };
+    }
+    const accessToken = await this.getAccessToken(user);
+    return { accessToken, role };
   }
 
   // 사용자 목록을 받음.

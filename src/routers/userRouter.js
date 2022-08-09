@@ -45,20 +45,20 @@ userRouter.post('/login', async function (req, res, next) {
     if (typeof autoLogin === 'undefined') {
       throw new Error('set autologin failed');
     }
-    const { accessToken, role, refreshToken } =
-      await userService.verifyPassword(email, password);
+    const tokens = await userService.verifyPassword(email, password, autoLogin);
+    console.log(tokens);
     if (autoLogin) {
       res.clearCookie('accessToken');
       res.clearCookie('refreshToken');
       res.clearCookie('userRole');
-      res.cookie('accessToken', accessToken, {
+      res.cookie('accessToken', tokens.accessToken, {
         maxAge: 1000 * 60 * 60,
         httpOnly: true,
       });
-      res.cookie('userRole', role, {
+      res.cookie('userRole', tokens.role, {
         maxAge: 1000 * 60 * 60 * 24 * 14,
       });
-      res.cookie('refreshToken', refreshToken, {
+      res.cookie('refreshToken', tokens.refreshToken, {
         maxAge: 1000 * 60 * 60 * 24 * 14,
         httpOnly: true,
       });
@@ -66,11 +66,11 @@ userRouter.post('/login', async function (req, res, next) {
       res.clearCookie('accessToken');
       res.clearCookie('refreshToken');
       res.clearCookie('userRole');
-      res.cookie('accessToken', accessToken, {
+      res.cookie('accessToken', tokens.accessToken, {
         maxAge: 1000 * 60 * 60 * 24,
         httpOnly: true,
       });
-      res.cookie('userRole', role, {
+      res.cookie('userRole', tokens.role, {
         maxAge: 1000 * 60 * 60 * 24,
       });
     }
@@ -119,9 +119,9 @@ userRouter.get(
         httpOnly: true,
       });
       // res.status(200).send({ message: 'success' });
-      res.redirect(`http://kdt-sw2-busan-team03.elicecoding.com:5001/`);
+      res.redirect(`http://kdt-sw2-busan-team03.elicecoding.com/`);
     } catch (error) {
-      res.redirect(`http://kdt-sw2-busan-team03.elicecoding.com:5001/notFound`);
+      res.redirect(`http://kdt-sw2-busan-team03.elicecoding.com/notFound`);
     }
   }
 );
@@ -190,10 +190,10 @@ userRouter.get('/newPassword/:redisKey', async (req, res, next) => {
   try {
     const userEmail = await redisClient.get(redisKey);
     if (!userEmail) {
-      res.redirect(`http://kdt-sw2-busan-team03.elicecoding.com:5001/notFound`);
+      res.redirect(`http://kdt-sw2-busan-team03.elicecoding.com/notFound`);
     }
     res.redirect(
-      `http://kdt-sw2-busan-team03.elicecoding.com:5001/changePassword/${redisKey}`
+      `http://kdt-sw2-busan-team03.elicecoding.com/changePassword/${redisKey}`
     );
   } catch (e) {
     next(e);

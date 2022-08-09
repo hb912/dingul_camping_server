@@ -98,7 +98,7 @@ async function mailer(email, randomNumber) {
         <br />
         <br />
         <a
-          href="http://localhost:5000/api/newPassword/${randomNumber}"
+          href="http://kdt-sw2-busan-team03.elicecoding.com:5000/api/newPassword/${randomNumber}"
           style="
             width: 179px;
             height: 60px;
