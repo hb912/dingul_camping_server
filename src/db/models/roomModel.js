@@ -17,17 +17,10 @@ export class RoomModel {
 
   //룸생성
   async create(room) {
-    const { name, content, imgSrc, price, maxPeople, minPeople } = room;
-    const newRoom = await Room.create({
-      name,
-      content,
-      imgSrc,
-      price,
-      maxPeople,
-      minPeople,
-    });
+    const newRoom = await Room.create(room);
     return newRoom;
   }
+
   async findAll() {
     const rooms = await Room.find({});
     return rooms;

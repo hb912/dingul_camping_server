@@ -15,6 +15,16 @@ const RoomSchema = new Schema(
     imgSrc: {
       type: [String],
     },
+    roomType: {
+      type: String,
+    },
+    icon: {
+      type: String,
+    },
+    position: {
+      top: Number,
+      right: Number,
+    },
     maxPeople: {
       type: Number,
       required: true,
