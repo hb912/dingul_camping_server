@@ -7,6 +7,12 @@ class ReviewService {
 
   // review 생성
   async addReview(reviewInfo) {
+    const { bookingID } = reviewInfo;
+    const review = await this.reviewModel.findByBookingId(bookingID);
+    if (review) {
+      throw new Error('이미 리뷰가 작성되었습니다.');
+    }
+
     const newReview = await reviewModel.create(reviewInfo);
 
     if (!newReview) {

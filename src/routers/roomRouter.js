@@ -30,13 +30,26 @@ roomRouter.get('/', async (req, res, next) => {
 });
 
 roomRouter.post('/create', async (req, res, next) => {
-  const { name, price, content, imgSrc, maxPeople, minPeople } = req.body;
+  const {
+    name,
+    price,
+    content,
+    imgSrc,
+    icon,
+    roomType,
+    position,
+    maxPeople,
+    minPeople,
+  } = req.body;
   try {
     const newRoom = await roomService.addRoom({
       name,
       price,
       content,
       imgSrc,
+      icon,
+      roomType,
+      position,
       maxPeople,
       minPeople,
     });

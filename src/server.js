@@ -19,7 +19,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use(
   cors({
-    origin: 'http://kdt-sw2-busan-team03.elicecoding.com',
+    origin: 'http://localhost:3000',
     credentials: true,
   })
 );
